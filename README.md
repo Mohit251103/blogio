@@ -1,5 +1,5 @@
 <div align="center">
-    <h3>Blog.io</h3>
+    <img src="./public/profile.png" width="200px">
     <p>Write anything from anywhere and at anytime</p>
 </div>
 
