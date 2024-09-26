@@ -18,7 +18,7 @@ npm install
 
 Run your postgres server (refer: [Prisma docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-postgresql))
 
-#Make sure to add environment variables
+*Make sure to add environment variables*
 
 After connecting the database, run the following command:
 ```bash
