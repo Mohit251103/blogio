@@ -1,4 +1,4 @@
-<div style="text-align:center;">
+<div align="center">
     <h3>Blog.io</h3>
     <p>Write anything from anywhere and at anytime</p>
 </div>
