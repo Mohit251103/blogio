@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./public/profile.png" width="200px">
+    <img src="./public/profile.png" width="150px">
     <p>Write anything from anywhere and at anytime</p>
 </div>
 
