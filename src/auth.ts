@@ -2,12 +2,15 @@ import NextAuth, { CredentialsSignin, NextAuthResult } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import GithubProvider from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "./prisma"
 
 class InvalidLoginError extends CredentialsSignin {
     code = "Invalid identifier or password"
 }
 
-export const {handlers, signIn, signOut, auth}:NextAuthResult = NextAuth({
+export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
+    adapter: PrismaAdapter(prisma),
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -29,5 +32,11 @@ export const {handlers, signIn, signOut, auth}:NextAuthResult = NextAuth({
                 }
             },
         }),
-    ]
+    ],
+    callbacks: {
+        authorized: async ({ auth }) => {
+            // Logged in users are authenticated, otherwise redirect to login page
+            return !!auth
+        },
+    },
 })
