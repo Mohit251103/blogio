@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -21,9 +22,21 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  subscribers   Subscriber[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Blog      Blog[]
+  Like      Like[]
+}
+
+model Subscriber{
+  userId String 
+  subscriberId String
+  user User @relation(fields: [userId], references: [id])
+  subscribedAt DateTime @default(now())
+
+  @@unique([userId, subscriberId])
 }
 
 model Account {
@@ -63,4 +76,26 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Blog {
+  id          String @id @default(cuid())
+  userId      String 
+  title       String
+  slug        String @unique
+  description String
+  author      User   @relation(fields: [userId], references: [id])
+  Like        Like[]
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  blogId String
+  user   User   @relation(fields: [userId], references: [id])
+  blog   Blog   @relation(fields: [blogId], references: [id])
+
+  likedAt DateTime @default(now())
+
+  @@unique([userId, blogId])
 }

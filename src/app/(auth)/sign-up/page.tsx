@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/ui/theme";
 import { GoogleSignUpButton, GithubSignUpButton } from "@/components/auth/SocialSignUp";
 import EmailSignUp from "@/components/auth/CredentialsSignup";
+import NavigateButton from "@/components/ui/ClientNavigateButton";
 const SignUp = () => {
     return (
         <div className="flex flex-col justify-center items-center h-[100vh] bg-background text-foreground">
@@ -13,6 +14,10 @@ const SignUp = () => {
                 </div>
                 <div className="relative w-full flex items-center justify-center my-4"><span className="bg-foreground h-[0.5px] w-2/5 mx-2"></span>or<span className="bg-foreground h-[0.5px] w-2/5 mx-2"></span></div>
                 <EmailSignUp/>
+            </div>
+            <div className="flex items-center">
+                <p className="text-sm text-slate-500">Already have an account?</p>
+                <NavigateButton location="sign-in">Sign In</NavigateButton>
             </div>
         </div>
     )
