@@ -1,8 +1,8 @@
-import { Heading1, Heading2, Heading3 } from 'lucide-react';
+import { Heading1, Heading2, Heading3, Leaf } from 'lucide-react';
 import "../../app/globals.css"
 
 const EditorMenu = () => {
-    return <div className="w-[35vw] md:w-[15vw] h-[30vh] rounded-md bg-card text-card-foreground p-2 overflow-y-auto absolute">
+    return <div className={`w-[35vw] md:w-[15vw] h-[30vh] rounded-md bg-card text-card-foreground p-2 overflow-y-auto z-100`}>
         <p className='text-card-foreground font-bold text-xs'>Basic Blocks</p>
         <div className='flex items-center hover:bg-gray-500/50 hover:opacity-80 rounded-md hover:cursor-pointer p-1 text-left'>
             <Heading1 />

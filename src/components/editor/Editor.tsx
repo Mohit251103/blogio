@@ -13,8 +13,9 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import "../../prosemirror.css"
-import { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import EditorMenu from './EditorMenu';
+import { PopupContext, PopupContextType } from '@/context/popup-provider';
 
 // new Editor({
 //     // bind Tiptap to `.element`
@@ -31,14 +32,19 @@ import EditorMenu from './EditorMenu';
 //     injectCSS: false,
 // })
 
-const Tiptap = () => {
+const Tiptap = ({children}:{children:React.ReactNode}) => {
     const [editorState, setEditorState] = useState<string>("");
-    const [menu, setMenu] = useState<Boolean>(false);
+    const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
     const [initialContent, setInitialContent] = useState<string>("<p>Write / or type anything...</p>")
     const inputRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState({
         top: 0,
         left: 0
+    })
+
+    const [scroll, setScroll] = useState({
+        xscroll: 0,
+        yscroll:0
     })
     const editor = useEditor({
         extensions: [StarterKit,
@@ -55,8 +61,8 @@ const Tiptap = () => {
             OrderedList,
             ListItem
         ],
-        // content: `${initialContent}`,
-        autofocus: true,
+        content: `${initialContent}`,
+        autofocus: 'start',
         editorProps: {
             attributes: {
                 class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
@@ -69,6 +75,25 @@ const Tiptap = () => {
             setEditorState(editor.getHTML());
         }
     })
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // console.log('Scroll X:', window.scrollX);
+            // console.log('Scroll Y:', window.scrollY);
+            setScroll({
+                xscroll: window.scrollX,
+                yscroll: window.scrollY
+            })
+        };
+
+        // Attach scroll event listener
+        window.addEventListener('scroll', handleScroll);
+
+        // Cleanup function to remove the event listener
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     useEffect(() => {
         // if (editorState.length>0 && initialContent!=="") {
@@ -85,18 +110,28 @@ const Tiptap = () => {
         editor.chain().focus().setImage({ src: url }).run()
     }
 
-    const handleKeyCapture = (event:any) => {
-        if (event.key === "/") {
-            console.log(inputRef.current?.getBoundingClientRect());
-            // const { top, left } = inputRef.current?.getBoundingClientRect();
-            setMenu(true);
+    const handleKeyCapture = (event: any) => {
+
+        if (event.key === "Enter") {
+            // setEditorState(editor.getText() + "<p?>Hello ... </p?>")
         }
-        else setMenu(false);
+
+        if (event.key === "/") {
+            const { head } = editor.state.selection;
+            const resolvedPos = editor.view.coordsAtPos(head);  // Get coordinates of the caret
+            
+            setPosition({
+                top: scroll.yscroll + resolvedPos.top,
+                left: scroll.xscroll + resolvedPos.left+10
+            })
+            setEditorMenu(true);
+        }
+        else setEditorMenu(false);
     }
 
     return (
         <>
-            <div className="control-group">
+            {/* <div className="control-group">
                 <div className="button-group">
                     <button
                         onClick={() => editor!.chain().focus().toggleBlockquote().run()}
@@ -147,9 +182,15 @@ const Tiptap = () => {
 
 
                 </div>
-            </div>
-            {menu && <EditorMenu/>}
-            <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] h-[100vh] w-[100vw] overflow-x-hidden overflow-y-auto bg-background text-foreground border-none' placeholder='Write / or type anything...' onKeyDown={(e) => handleKeyCapture(e)}/>
+            </div> */}
+            {
+                editorMenu && <div className={`z-10 rounded-md bg-background text-foreground shadow-sm shadow-foreground absolute`} style={{ top: `${position.top}px`, left: `${position.left + 1}px` }}>
+                    <EditorMenu />
+                </div>
+            }
+            <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start ' placeholder='Write / or type anything...' onKeyDown={(e) => handleKeyCapture(e)} >
+                {/* {children} */}
+            </EditorContent>
         </>
     )
 }

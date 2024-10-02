@@ -15,6 +15,7 @@ const Dashboard = async () => {
             <Image src={session?.user?.image as string} className="rounded-full" width={50} height={50} alt="profile"></Image>
             <h2 className="text-2xl text-bold ">{ session?.user?.name }</h2>
             <p className="text-sm text-slate-500">{session?.user?.email}</p>
+            <p>{JSON.stringify(session?.user)}</p>
             <form action={handleLogOut}>
                 <Button type="submit">Log Out</Button>
             </form>
