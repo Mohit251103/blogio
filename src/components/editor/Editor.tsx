@@ -3,16 +3,23 @@ import { Editor } from '@tiptap/core'
 import BulletList from '@tiptap/extension-bullet-list'
 import Document from '@tiptap/extension-document'
 import ListItem from '@tiptap/extension-list-item'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import OrderedList from '@tiptap/extension-ordered-list'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
 import Heading from '@tiptap/extension-heading'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import Image from '@tiptap/extension-image'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import Table from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
+import CodeBlock from '@tiptap/extension-code-block'
+import Blockquote from '@tiptap/extension-blockquote'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import "../../prosemirror.css"
+import "../../app/globals.css"
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import EditorMenu from './EditorMenu';
 import { PopupContext, PopupContextType } from '@/context/popup-provider';
@@ -48,9 +55,6 @@ const Tiptap = ({children}:{children:React.ReactNode}) => {
     })
     const editor = useEditor({
         extensions: [StarterKit,
-            Document,
-            Paragraph,
-            Text,
             Heading.configure({
                 levels: [1, 2, 3],
             }),
@@ -59,7 +63,18 @@ const Tiptap = ({children}:{children:React.ReactNode}) => {
             Image,
             BulletList,
             OrderedList,
-            ListItem
+            ListItem,
+            TaskItem.configure({
+                nested: true,
+            }),
+            Table.configure({
+                resizable: true,
+            }),
+            TableRow,
+            TableHeader,
+            TableCell,
+            CodeBlock,
+            Blockquote
         ],
         content: `${initialContent}`,
         autofocus: 'start',
@@ -73,7 +88,8 @@ const Tiptap = ({children}:{children:React.ReactNode}) => {
         },
         onUpdate({ editor }) {
             setEditorState(editor.getHTML());
-        }
+        },
+        immediatelyRender: false
     })
 
     useEffect(() => {
@@ -185,7 +201,7 @@ const Tiptap = ({children}:{children:React.ReactNode}) => {
             </div> */}
             {
                 editorMenu && <div className={`z-10 rounded-md bg-background text-foreground shadow-sm shadow-foreground absolute`} style={{ top: `${position.top}px`, left: `${position.left + 1}px` }}>
-                    <EditorMenu />
+                    <EditorMenu editor={editor} />
                 </div>
             }
             <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start ' placeholder='Write / or type anything...' onKeyDown={(e) => handleKeyCapture(e)} >
