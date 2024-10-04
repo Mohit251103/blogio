@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { ModeToggle } from "../ui/theme";
 
 const EditorNav = ({ user }: {
     user: {
@@ -15,6 +16,7 @@ const EditorNav = ({ user }: {
                 <p className="text-sm text-foreground">{user.email}</p>
             </div>
             <div className="flex items-center">
+                <ModeToggle />
                 <Button variant={"outline"}>Preview</Button>
                 <Button>Publish</Button>
             </div>

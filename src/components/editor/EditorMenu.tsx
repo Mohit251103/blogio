@@ -11,6 +11,7 @@ const EditorMenu = ({ editor }: { editor: any }) => {
     const { edgestore } = useEdgeStore();
 
     const handleImageInput = () => {
+        console.log("handling click .. ");
         imageRef.current?.click();
     }
 
@@ -22,20 +23,21 @@ const EditorMenu = ({ editor }: { editor: any }) => {
     //     }
     // }, [url]);
 
-    const handleFileChange = useCallback(async (event: any) => {
-        console.log(event.target.files[0]);
-        const file = event.target.files[0]
+    const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("inside file change .. ");
+        const file = event.target.files?.[0];
         if (file) {
-            const res = await edgestore.publicFiles.upload({
-                file: file
-            })
-            // setUrl(res.url);
-            editor.chain().focus().setImage({ src: res.url }).run();
+            try {
+                console.log("trying uploading .. ");
+                const res = await edgestore.publicFiles.upload({
+                    file: file
+                });
+                editor.chain().focus().setImage({ src: res.url }).run();
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            }
         }
-        else {
-            console.log("No file selected");
-        }
-    }, [editor]);
+    }, [editor, edgestore.publicFiles]);
 
     return <div className={`w-[35vw] md:w-[15vw] h-[30vh] rounded-md bg-card text-card-foreground p-2 overflow-y-auto z-100`}>
         <p className='text-card-foreground font-bold text-xs'>Basic Blocks</p>
@@ -120,16 +122,16 @@ const EditorMenu = ({ editor }: { editor: any }) => {
                 <p className='text-xs text-slate-400'>Visually divide a block</p>
             </div>
         </div>
-        <div className='flex items-center hover:bg-gray-500/50 hover:opacity-80 rounded-md hover:cursor-pointer p-1 text-left'
-            onClick={handleImageInput}>
+        {/* <div className='flex items-center hover:bg-gray-500/50 hover:opacity-80 rounded-md hover:cursor-pointer p-1 text-left'
+            onClick={() => handleImageInput()}>
             <Image />
             <div className='mx-4 py-1'>
                 <p className='text-sm'>Image</p>
                 <p className='text-xs text-slate-400'>Add an image</p>
             </div>
-        </div>
+        </div> */}
 
-        <input type='file' onChange={handleFileChange} ref={imageRef} accept='image/*' style={{ display: "none" }}></input>
+        <input type='file' onChange={handleFileChange} onClick={(e) => e.stopPropagation()} onInput={(e) => console.log('Input event triggered', e)} ref={imageRef} accept='image/*' style={{ display: "none" }} />
 
 
     </div>

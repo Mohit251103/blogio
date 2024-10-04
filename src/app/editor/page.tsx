@@ -24,7 +24,7 @@ const Editor = () => {
 
     return (
         <div className="bg-background text-foreground flex justify-center items-center flex-col" onClick={()=> setEditorMenu(false)}>
-            <div className="w-full sticky top-0 z-50 text-foreground bg-opacity-80 backdrop-blur-sm h-fit flex justify-between">
+            <div className="w-full sticky top-0 z-50 text-foreground bg-opacity-80 backdrop-blur-md h-fit flex justify-between">
                 <Button variant="outline" className="p-1 ml-3 mt-3" onClick={handleClick}><ChevronLeft/></Button>
                 <div className="md:w-[70%] max-md:w-[85%] mx-auto">
                     <EditorNav user={{ name: session?.user?.name, email: session?.user?.email, image: session?.user?.image }} />
