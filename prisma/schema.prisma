@@ -86,6 +86,7 @@ model Blog {
   description String
   author      User   @relation(fields: [userId], references: [id])
   Like        Like[]
+  isPublished Boolean @default(false)
 }
 
 model Like {

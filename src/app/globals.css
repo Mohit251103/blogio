@@ -50,7 +50,7 @@ body {
     --novel-highlight-gray: #f1f1ef;
     --black: black;
     --white: white;
-    --gray-3: rgb(101, 101, 101);
+    --gray-3: #1f2937;
   }
 
   .dark {
@@ -270,7 +270,7 @@ body {
 }
 
 pre {
-  background: var(--black);
+  background: var(--gray-3);
   border-radius: 0.5rem;
   color: var(--white);
   font-family: 'JetBrainsMono', monospace;
@@ -289,4 +289,5 @@ blockquote {
   border-left: 3px solid var(--gray-3);
   margin: 1.5rem 0;
   padding-left: 1rem;
+  font-style: italic;
 }

@@ -11,7 +11,7 @@ const Dashboard = async () => {
     }
     return (
         <div className="flex justify-center items-center flex-col">
-            <NavigateButton location="editor">Move to text editor</NavigateButton>
+            <NavigateButton location="editor/new">Move to text editor</NavigateButton>
             <Image src={session?.user?.image as string} className="rounded-full" width={50} height={50} alt="profile"></Image>
             <h2 className="text-2xl text-bold ">{ session?.user?.name }</h2>
             <p className="text-sm text-slate-500">{session?.user?.email}</p>

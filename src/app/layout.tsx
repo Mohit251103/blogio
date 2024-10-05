@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { PopupProvider } from "@/context/popup-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { EditorProvider } from "@/context/editor-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,7 +43,9 @@ export default function RootLayout({
           <SessionProvider>
             <PopupProvider>
               <EdgeStoreProvider>
-                {children}
+                <EditorProvider>
+                  {children}
+                </EditorProvider>
               </EdgeStoreProvider>
             </PopupProvider>
           </SessionProvider>

@@ -19,32 +19,45 @@ import Blockquote from '@tiptap/extension-blockquote'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import "../../app/globals.css"
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import EditorMenu from './EditorMenu';
 import { PopupContext, PopupContextType } from '@/context/popup-provider';
 import TableMenu from './TableButton';
+import axiosInstance from '@/lib/axiosInstance';
+import { useSession } from 'next-auth/react';
+import { useToast } from '@/hooks/use-toast';
+import { EditorContext } from '@/context/editor-context';
 
-// new Editor({
-//     // bind Tiptap to `.element`
-//     element: document.querySelector('.element'),
-//     // register extensions
-//     extensions: [Document, Paragraph, Text],
-//     // set the initial content
-//     content: '<p>Example Text</p>',
-//     // place the cursor in the editor after initialization
-//     autofocus: true,
-//     // make the text editable (but that’s the default anyway)
-//     editable: true,
-//     // disable the loading of the default CSS (which is not much anyway)
-//     injectCSS: false,
-// })
+const useDebouncedCallback = (callback: Function, delay: number) => {
+    const handler = useRef<NodeJS.Timeout>();
+    return useCallback(
+        (...args: any[]) => {
+            clearTimeout(handler.current);
+            handler.current = setTimeout(() => {
+                clearTimeout(handler.current);
+                callback(...args);
+            }, delay);
+
+        }, [callback, delay])
+    // useEffect(() => {
+    //     return () => {
+    //         if (handler.current) {
+    //             clearTimeout(handler.current)
+    //         }
+    //     };
+    // }, [])
+
+    // return debounce;
+}
 
 const Tiptap = ({ children }: { children: React.ReactNode }) => {
-    const [editorState, setEditorState] = useState<string>("");
+    const { data: session } = useSession();
+    const { editorState, setEditorState, setDrafting, setBlogData } = useContext(EditorContext);
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
     const [initialContent, setInitialContent] = useState<string>("<p>Write / or type anything...</p>")
     const [tableMenu, setTableMenu] = useState<boolean>(false);
     const inputRef = useRef<HTMLDivElement>(null);
+    const { toast } = useToast();
     const [position, setPosition] = useState({
         top: 0,
         left: 0
@@ -59,6 +72,8 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
         top: 0,
         left: 0
     });
+
+
     const editor = useEditor({
         extensions: [StarterKit,
             Heading.configure({
@@ -142,13 +157,26 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
 
     }, [editor?.isActive('table'), editorState])
 
-    if (!editor) {
-        return <></>
-    }
+    const handleUpdate = useDebouncedCallback(async () => {
+        try {
+            setDrafting(true);
+            const res = await axiosInstance.post("/api/blog/c", { ...session?.user, editorState });
+            console.log(res.data)
+            setBlogData(res.data.data)
+            setDrafting(false);
+            console.log("Drafted..");
+        } catch (error) {
+            console.log(error);
+        }
+    }, 1000)
+
+    useEffect(() => {
+        handleUpdate();
+    }, [editorState, editor])
 
     const addImage = () => {
         const url = "";
-        editor.chain().focus().setImage({ src: url }).run()
+        editor?.chain().focus().setImage({ src: url }).run()
     }
 
     const handleKeyCapture = (event: any) => {
@@ -157,9 +185,13 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
             // setEditorState(editor.getText() + "<p?>Hello ... </p?>")
         }
 
+        if (!editor) {
+            return;
+        }
+
         if (event.key === "/") {
-            const { head } = editor.state.selection;
-            const resolvedPos = editor.view.coordsAtPos(head);  // Get coordinates of the caret
+            const { head } = editor?.state.selection;
+            const resolvedPos = editor?.view.coordsAtPos(head);  // Get coordinates of the caret
 
             setPosition({
                 top: scroll.yscroll + resolvedPos.top,
@@ -168,6 +200,11 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
             setEditorMenu(true);
         }
         else setEditorMenu(false);
+    }
+
+
+    if (!editor) {
+        return <></>
     }
 
     return (
@@ -179,7 +216,7 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
             }
 
             {
-                tableMenu && <TableMenu editor={editor} top={scroll.yscroll + selectionPos.top - 100} left={scroll.xscroll + selectionPos.left} />
+                tableMenu && <TableMenu editor={editor} top={scroll.yscroll + selectionPos.top - 180} left={scroll.xscroll + selectionPos.left} />
             }
 
             <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start' placeholder='Write / or type anything...' onKeyDown={(e) => handleKeyCapture(e)} >
