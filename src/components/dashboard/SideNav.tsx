@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import SideNavButton from "../ui/ClientSideNavButton";
 import { Button } from "../ui/button"
@@ -10,23 +11,31 @@ import {
     SelectLabel,
     SelectGroup
 } from "@/components/ui/select"
-import { BookDashed, LayoutDashboard, NotebookPen, PlusCircle } from "lucide-react";
-import { signOut } from "@/auth";
+import { BookDashed, LayoutDashboard, NotebookPen, PlusCircle, X } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { useContext } from "react";
+import { PopupContext } from "@/context/popup-provider";
 
 
 const SideNav = () => {
     const handleSubmit = async () => {
-        "use server";
     }
 
     const handleLogOut = async () => {
-        "use server"
         await signOut({ redirect: true, redirectTo: "/sign-in" });
     }
 
+    const { sideNav, setSideNav } = useContext(PopupContext)
+
     return (
-        <div className="flex flex-col justify-between items-center border-r mr-2 max-lg:hidden overflow-y-auto ">
+        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background z-50 overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400`}>
             <div className="">
+                <div className={`lg:hidden absolute top-1 right-1`} onClick={()=>setSideNav(false)}>
+                    <X/>
+                </div>
+                <div className={`lg:hidden my-6`}>
+                    <p className=" text-md font-extrabold text-center">Blog.io</p>
+                </div>
                 <div className="m-2">
                     <SideNavButton className="flex items-center my-2" route="/dashboard">
                         <LayoutDashboard className="w-4 h-4 mr-2" />
@@ -61,7 +70,7 @@ const SideNav = () => {
                     </Select>
                 </div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mb-2">
                 <form action={handleLogOut}>
                     <Button type="submit">Log Out</Button>
                 </form>
