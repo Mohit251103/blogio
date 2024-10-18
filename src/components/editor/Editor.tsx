@@ -39,23 +39,17 @@ const useDebouncedCallback = (callback: Function, delay: number) => {
             }, delay);
 
         }, [callback, delay])
-    // useEffect(() => {
-    //     return () => {
-    //         if (handler.current) {
-    //             clearTimeout(handler.current)
-    //         }
-    //     };
-    // }, [])
-
-    // return debounce;
 }
 
-const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|null }) => {
+const Tiptap = ({ children, slug }: { children: React.ReactNode, slug: string | null }) => {
     const { data: session } = useSession();
     const { editorState, setEditorState, setDrafting, setBlogData } = useContext(EditorContext);
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
-    const [initialContent, setInitialContent] = useState<string>("<p>Write / or type anything...</p>")
     const [tableMenu, setTableMenu] = useState<boolean>(false);
+    const [content, setContent] = useState({
+        title: "",
+        description: ""
+    })
     const inputRef = useRef<HTMLDivElement>(null);
     const { toast } = useToast();
     const [position, setPosition] = useState({
@@ -72,7 +66,6 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
         top: 0,
         left: 0
     });
-
 
     const editor = useEditor({
         extensions: [StarterKit,
@@ -98,7 +91,7 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
             CodeBlock,
             Blockquote
         ],
-        content: `${initialContent}`,
+        content: `${content.description}`,
         autofocus: 'start',
         editorProps: {
             attributes: {
@@ -112,7 +105,24 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
             setEditorState(editor.getHTML());
         },
         immediatelyRender: false
-    })
+    });
+
+    const getBlog = async () => {
+        try {
+            const res = await axiosInstance.get(`/api/blog/get?slug=${slug}`);
+            setContent({ ...res.data.data, description: res.data.data.description });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getBlog();
+    }, []);
+
+    useEffect(() => {
+        editor?.commands.setContent(content.description);
+    },[content.title!=""])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -171,6 +181,8 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
     }, 1000)
 
     useEffect(() => {
+        if (editorState === "second") return;
+        console.log(editor);
         handleUpdate();
     }, [editorState, editor])
 
@@ -203,8 +215,8 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
     }
 
 
-    if (!editor) {
-        return <></>
+    if (!editor || !content.description) {
+        return <div className='text-center'>Loading...</div>
     }
 
     return (
@@ -218,8 +230,8 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|nul
             {
                 tableMenu && <TableMenu editor={editor} top={scroll.yscroll + selectionPos.top - 180} left={scroll.xscroll + selectionPos.left} />
             }
-
-            <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start' placeholder='Write / or type anything...' onKeyDown={(e) => handleKeyCapture(e)} >
+            <p className='text-2xl font-extrabold my-2'>{content.title}</p>
+            <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start' onKeyDown={(e) => handleKeyCapture(e)} >
                 {/* {children} */}
             </EditorContent>
         </>

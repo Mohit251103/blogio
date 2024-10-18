@@ -15,7 +15,7 @@ export const GET = async (req:NextRequest) => {
             return NextResponse.json({ message: "Blog not found", status: 404 });
         }
         else {
-            return NextResponse.json({ data: blog.description, message: "Blog found", status: 200 });
+            return NextResponse.json({ data: {title:blog.title, description:blog.description}, message: "Blog found", status: 200 });
         }
     } catch (error) {
         // console.log(error);

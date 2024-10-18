@@ -14,7 +14,6 @@ const Draft = async () => {
     const getDrafts = async () => {
         "use server";
         try {
-            console.log("is it here?");
             const blogs = await prisma.blog.findMany({
                 where: {
                     userId: session?.user?.id,
@@ -24,13 +23,10 @@ const Draft = async () => {
             return blogs;
         } catch (error) {
             console.log(error);
-            console.log("yes");
         }
-        console.log("ended");
     }
 
     blogs = await getDrafts();
-    console.log("yeah");
 
     return (
         <div className="flex justify-center items-center flex-col min-h-screen">

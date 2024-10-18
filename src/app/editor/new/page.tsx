@@ -15,7 +15,6 @@ const Editor = () => {
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
     const router = useRouter();
     const searchParams = useSearchParams();
-    console.log(searchParams.get('slug'));
     const handleClick = () => {
         router.push("/dashboard");
     }

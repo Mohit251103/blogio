@@ -13,7 +13,7 @@ const BlogCard = async ({ slug, title, description }: { slug: string, title: str
             <div>
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
-                    <CardDescription dangerouslySetInnerHTML={{ __html: description.split(">")[0] }}></CardDescription>
+                    <CardDescription dangerouslySetInnerHTML={{ __html: description.split(">")[0]+"<span>...</span>" }}></CardDescription>
                 </CardHeader>
                 <CardFooter className="flex justify-start ">
                     <Button variant="default"><BookOpen className="mr-1 w-4 h-4" />Open</Button>

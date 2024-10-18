@@ -7,12 +7,15 @@ import "../../../globals.css"
 
 const Preview = () => {
     const { slug } = useParams();
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState({
+        title: "",
+        description: ""
+    });
     const getBlog = async () => {
         try {
             const res = await axiosInstance.get(`/api/blog/get/?slug=${slug}`)
             // console.log(res.data.data);
-            setContent(res.data.data);
+            setContent({...res.data.data});
         } catch (error) {
             console.log(error);
         }
@@ -27,7 +30,8 @@ const Preview = () => {
 
     return (
         <div className="max-w-[70vw] min-w-[70vw] mx-auto">
-            <div className="ProseMirror" dangerouslySetInnerHTML={{__html:content}}></div>
+            <p className="text-2xl font-extrabold text-center mt-4">{content.title}</p>
+            <div className="ProseMirror" dangerouslySetInnerHTML={{__html:content.description}}></div>
         </div>
     )
 }
