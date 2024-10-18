@@ -45,7 +45,7 @@ const SideNav = () => {
                         <NotebookPen className="w-4 h-4 mr-2" />
                         <p className="text-md"> Your Blogs</p>
                     </SideNavButton>
-                    <SideNavButton className="flex items-center my-2" route="/dashboard">
+                    <SideNavButton className="flex items-center my-2" route="/draft">
                         <BookDashed className="w-4 h-4 mr-2" />
                         <p className="text-md"> Drafts<span className="ml-2">1</span></p>
                     </SideNavButton>
