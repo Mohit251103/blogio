@@ -7,14 +7,14 @@ export const POST = async (req:Request) => {
 
         const blog = await prisma.blog.findUnique({
             where: {
-                slug: "slug1"
+                slug: body.slug
             }
         })
 
         const data = {
-            slug: "slug1",
-            userId: body.id,
-            description: body.editorState
+            slug: body.slug,
+            userId: body.userId,
+            description: body.editorState? body.editorState : ""
         }
 
         let blogData;
@@ -28,7 +28,7 @@ export const POST = async (req:Request) => {
             blogData = await prisma.blog.create({
                 data: {
                     ...data,
-                    title: "title1"
+                    title: body.title
                 }
             })
         }

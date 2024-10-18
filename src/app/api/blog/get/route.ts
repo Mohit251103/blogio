@@ -9,7 +9,7 @@ export const GET = async (req:NextRequest) => {
             where: {slug : slug as string}
         })
 
-        console.log(blog);
+        // console.log(blog);
 
         if (!blog) {
             return NextResponse.json({ message: "Blog not found", status: 404 });
@@ -18,7 +18,7 @@ export const GET = async (req:NextRequest) => {
             return NextResponse.json({ data: blog.description, message: "Blog found", status: 200 });
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return Response.json({ message: error, status: 500 });
     }
 }

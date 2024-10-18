@@ -6,14 +6,19 @@ interface PopupContextType{
     setEditorMenu: React.Dispatch<SetStateAction<boolean>>
 
     sideNav: boolean,
-    setSideNav: React.Dispatch<SetStateAction<boolean>>
+    setSideNav: React.Dispatch<SetStateAction<boolean>>,
+
+    blogStarter: boolean,
+    setBlogStarter: React.Dispatch<SetStateAction<boolean>>
 }
 
 const PopupContext = createContext<PopupContextType>({
     editorMenu: false,
     setEditorMenu: () => { },
     sideNav: false,
-    setSideNav: () => { }
+    setSideNav: () => { },
+    blogStarter: false,
+    setBlogStarter: ()=>{ }
 })
 
 
@@ -22,8 +27,9 @@ const PopupProvider = (
 ) => {
     const [editorMenu, setEditorMenu] = useState(false);
     const [sideNav, setSideNav] = useState(false);
+    const [blogStarter, setBlogStarter] = useState(false);
     return (
-        <PopupContext.Provider value={{ editorMenu, setEditorMenu, sideNav, setSideNav }}>
+        <PopupContext.Provider value={{ editorMenu, setEditorMenu, sideNav, setSideNav, blogStarter, setBlogStarter }}>
         {children}
         </PopupContext.Provider>
     )

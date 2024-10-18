@@ -50,7 +50,7 @@ const useDebouncedCallback = (callback: Function, delay: number) => {
     // return debounce;
 }
 
-const Tiptap = ({ children }: { children: React.ReactNode }) => {
+const Tiptap = ({ children, slug }: { children: React.ReactNode, slug:string|null }) => {
     const { data: session } = useSession();
     const { editorState, setEditorState, setDrafting, setBlogData } = useContext(EditorContext);
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
@@ -160,7 +160,7 @@ const Tiptap = ({ children }: { children: React.ReactNode }) => {
     const handleUpdate = useDebouncedCallback(async () => {
         try {
             setDrafting(true);
-            const res = await axiosInstance.post("/api/blog/c", { ...session?.user, editorState });
+            const res = await axiosInstance.post("/api/blog/c", { editorState, slug: slug, userId: session?.user?.id });
             console.log(res.data)
             setBlogData(res.data.data)
             setDrafting(false);

@@ -7,15 +7,15 @@ import { EditorContext } from "@/context/editor-context";
 import { Check, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const EditorNav = () => {
+const EditorNav = ({slug}:{slug:string|null}) => {
     const user = useSession().data?.user;
     const { drafting, blogData } = useContext(EditorContext);
-    console.log(blogData);
+    // console.log(blogData);
     const router = useRouter();
 
-    if (!blogData) {
-        return null;
-    }
+    // if (!blogData) {
+    //     return null;
+    // }
 
     return (
         <div className="w-full flex items-center justify-between mb-5 p-1 h-fit">
@@ -33,7 +33,7 @@ const EditorNav = () => {
                     <p>Drafted</p>
                 </div>}
                 <ModeToggle />
-                <Button variant={"outline"} onClick={()=> router.push(`/editor/preview/${blogData.slug}`)}>Preview</Button>
+                <Button variant={"outline"} onClick={()=> router.push(`/editor/preview/${slug}`)}>Preview</Button>
                 <Button>Publish</Button>
             </div>
         </div>

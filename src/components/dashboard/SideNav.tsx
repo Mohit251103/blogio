@@ -25,10 +25,10 @@ const SideNav = () => {
         await signOut({ redirect: true, redirectTo: "/sign-in" });
     }
 
-    const { sideNav, setSideNav } = useContext(PopupContext)
+    const { sideNav, setSideNav, setBlogStarter } = useContext(PopupContext)
 
     return (
-        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background z-50 overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400`}>
+        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400`}>
             <div className="">
                 <div className={`lg:hidden absolute top-1 right-1`} onClick={()=>setSideNav(false)}>
                     <X/>
@@ -49,7 +49,10 @@ const SideNav = () => {
                         <BookDashed className="w-4 h-4 mr-2" />
                         <p className="text-md"> Drafts<span className="ml-2">1</span></p>
                     </SideNavButton>
-                    <SideNavButton className="flex items-center my-2" route="/editor/new">
+                    <SideNavButton className="flex items-center my-2" onClick={() => {
+                        console.log("entered");
+                        setBlogStarter(true);
+                    }}>
                         <PlusCircle className="w-4 h-4 mr-2" />
                         <p className="text-md"> Create Blog</p>
                     </SideNavButton>
