@@ -34,8 +34,8 @@ const NewBlogStarter = () => {
 
     const { blogStarter, setBlogStarter } = useContext(PopupContext);
     const generateSlug = (title : string) => {
-        let div_title = title.split(" ");
-        let slug = div_title.map((word) => word.toLowerCase()).join("-");
+        const div_title = title.split(" ");
+        const slug = div_title.map((word) => word.toLowerCase()).join("-");
         return slug;
     }
 
