@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate --no-engine && prisma migrate deploy"
   },
   "dependencies": {
     "@auth/core": "^0.35.3",
