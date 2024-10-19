@@ -1,11 +1,9 @@
 "use client";
-import Link from "next/link";
 import SideNavButton from "../ui/ClientSideNavButton";
 import { Button } from "../ui/button"
 import {
     Select,
     SelectContent,
-    SelectItem,
     SelectTrigger,
     SelectValue,
     SelectLabel,
@@ -19,8 +17,8 @@ import { PopupContext } from "@/context/popup-provider";
 
 const SideNav = () => {
     const [path, setPath] = useState<string>("");
-    const handleSubmit = async () => {
-    }
+    // const handleSubmit = async () => {
+    // }
 
     const handleLogOut = async () => {
         await signOut({ redirect: true, redirectTo: "/sign-in" });

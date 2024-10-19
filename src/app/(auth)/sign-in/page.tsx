@@ -1,6 +1,5 @@
 
 import { GithubSignUpButton, GoogleSignUpButton } from "@/components/auth/SocialSignUp";
-import { Button } from "@/components/ui/button";
 import NavigateButton from "@/components/ui/ClientNavigateButton";
 import { ModeToggle } from "@/components/ui/theme";
 

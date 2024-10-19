@@ -5,9 +5,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "./prisma"
 import ForwardEmail from "next-auth/providers/forwardemail"
 
-class InvalidLoginError extends CredentialsSignin {
-    code = "Invalid identifier or password"
-}
+// class InvalidLoginError extends CredentialsSignin {
+//     code = "Invalid identifier or password"
+// }
 
 export const { handlers, signIn, signOut, auth }: NextAuthResult = NextAuth({
     adapter: PrismaAdapter(prisma),

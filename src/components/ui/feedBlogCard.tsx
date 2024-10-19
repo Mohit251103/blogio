@@ -1,5 +1,5 @@
 import { BookOpen } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
 import Image from "next/image"; 
 import { handleServerRedirect } from "@/actions";
 import { Button } from "./button";

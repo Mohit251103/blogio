@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { PopupContext } from "@/context/popup-provider";
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
-import { string, z } from "zod";
+import {  z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axiosInstance from "@/lib/axiosInstance";

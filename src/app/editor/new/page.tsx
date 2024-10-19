@@ -1,7 +1,5 @@
 "use client";
-import { auth } from "@/auth";
 import Tiptap from "@/components/editor/Editor";
-import dynamic from "next/dynamic";
 import { useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import EditorNav from "@/components/editor/EditorNav";
@@ -10,9 +8,8 @@ import { ChevronLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 const Editor = () => {
-    const [jobDescription, setJobDescription] = useState("");
     const { data: session } = useSession();
-    const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
+    const { setEditorMenu } = useContext<PopupContextType>(PopupContext);
     const router = useRouter();
     const searchParams = useSearchParams();
     const handleClick = () => {
@@ -32,9 +29,9 @@ const Editor = () => {
                 </div>
             </div>
             <Tiptap slug={searchParams.get('slug')}>
-                <form>
+                {/* <form>
                     <textarea name="title" className="prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none " placeholder="Write title here ... " />
-                </form>
+                </form> */}
             </Tiptap>
         </div>
     )

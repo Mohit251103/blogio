@@ -1,19 +1,19 @@
 "use client";
-import { Heading1, Heading2, Heading3, LayoutList, ListOrdered, List, Table, Code, Quote, Minus, Image } from 'lucide-react';
+import { Heading1, Heading2, Heading3, LayoutList, ListOrdered, List, Table, Code, Quote, Minus } from 'lucide-react';
 import "../../app/globals.css"
 import { useEdgeStore } from '@/lib/edgestore';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const EditorMenu = ({ editor }: { editor: any }) => {
 
-    const [url, setUrl] = useState<string>("");
+    // const [url, setUrl] = useState<string>("");
     const imageRef = useRef<HTMLInputElement>(null);
     const { edgestore } = useEdgeStore();
 
-    const handleImageInput = () => {
-        console.log("handling click .. ");
-        imageRef.current?.click();
-    }
+    // const handleImageInput = () => {
+    //     console.log("handling click .. ");
+    //     imageRef.current?.click();
+    // }
 
     // useEffect(() => {
     //     if (url) {

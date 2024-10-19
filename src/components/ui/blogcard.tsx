@@ -1,13 +1,8 @@
 import Image from "next/image";
 import { Button } from "./button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card";
 import { BookOpen, Trash2 } from "lucide-react";
-import { auth } from "@/auth";
-import { Description } from "@radix-ui/react-toast";
 import React from "react";
-import { redirect } from "next/navigation";
-import { prisma } from "@/prisma";
-import { revalidatePath } from "next/cache";
 import { handleDelete, handleServerRedirect } from "@/actions";
 
 const NormalRouteButton = (
@@ -36,8 +31,7 @@ const DeleteButton = (
     )
 }
 
-const BlogCard = async ({ slug, title, description }: { slug: string, title: string, description: string }) => {
-    const session = await auth();
+const BlogCard = async ({ slug, title }: { slug: string, title: string }) => {
     return (
 
         <Card className="w-fit flex max-w-[40vw]">

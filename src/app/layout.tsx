@@ -8,6 +8,7 @@ import { PopupProvider } from "@/context/popup-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { EditorProvider } from "@/context/editor-context";
 import { BlogProvider } from "@/context/blog-context";
+import { Suspense } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,17 +42,19 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider>
-            <PopupProvider>
-              <EdgeStoreProvider>
-                <EditorProvider>
-                  <BlogProvider>
-                    {children}
-                  </BlogProvider>
-                </EditorProvider>
-              </EdgeStoreProvider>
-            </PopupProvider>
-          </SessionProvider>
+          <Suspense>
+            <SessionProvider>
+              <PopupProvider>
+                <EdgeStoreProvider>
+                  <EditorProvider>
+                    <BlogProvider>
+                      {children}
+                    </BlogProvider>
+                  </EditorProvider>
+                </EdgeStoreProvider>
+              </PopupProvider>
+            </SessionProvider>
+          </Suspense>
           <Toaster />
         </ThemeProvider>
         <script src="https://kit.fontawesome.com/af9022b38a.js" crossOrigin="anonymous"></script>

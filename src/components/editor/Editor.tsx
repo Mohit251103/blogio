@@ -1,7 +1,5 @@
 "use client";
-import { Editor } from '@tiptap/core'
 import BulletList from '@tiptap/extension-bullet-list'
-import Document from '@tiptap/extension-document'
 import ListItem from '@tiptap/extension-list-item'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
@@ -41,7 +39,7 @@ const useDebouncedCallback = (callback: Function, delay: number) => {
         }, [callback, delay])
 }
 
-const Tiptap = ({ children, slug }: { children: React.ReactNode, slug: string | null }) => {
+const Tiptap = ({ slug }: { slug: string | null }) => {
     const { data: session } = useSession();
     const { editorState, setEditorState, setDrafting, setBlogData } = useContext(EditorContext);
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
@@ -51,7 +49,6 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug: string | 
         description: ""
     })
     const inputRef = useRef<HTMLDivElement>(null);
-    const { toast } = useToast();
     const [position, setPosition] = useState({
         top: 0,
         left: 0
@@ -186,10 +183,10 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug: string | 
         handleUpdate();
     }, [editorState, editor])
 
-    const addImage = () => {
-        const url = "";
-        editor?.chain().focus().setImage({ src: url }).run()
-    }
+    // const addImage = () => {
+    //     const url = "";
+    //     editor?.chain().focus().setImage({ src: url }).run()
+    // }
 
     const handleKeyCapture = (event: any) => {
 

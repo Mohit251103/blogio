@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 const EditorNav = ({slug}:{slug:string|null}) => {
     const user = useSession().data?.user;
-    const { drafting, blogData } = useContext(EditorContext);
+    const { drafting } = useContext(EditorContext);
     // console.log(blogData);
     const router = useRouter();
 

@@ -1,6 +1,5 @@
 "use client";
 import axiosInstance from "@/lib/axiosInstance";
-import { prisma } from "@/prisma";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import "../../../globals.css"
