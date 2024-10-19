@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/select"
 import { BookDashed, LayoutDashboard, NotebookPen, PlusCircle, X } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PopupContext } from "@/context/popup-provider";
 
 
 const SideNav = () => {
+    const [path, setPath] = useState<string>("");
     const handleSubmit = async () => {
     }
 
@@ -27,8 +28,12 @@ const SideNav = () => {
 
     const { sideNav, setSideNav, setBlogStarter } = useContext(PopupContext)
 
+    useEffect(() => {
+        setPath(window.location.pathname);
+    }, [window.location.pathname]);
+
     return (
-        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400`}>
+        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400 min-w-[15vw]`}>
             <div className="">
                 <div className={`lg:hidden absolute top-1 right-1`} onClick={()=>setSideNav(false)}>
                     <X/>
@@ -37,19 +42,19 @@ const SideNav = () => {
                     <p className=" text-md font-extrabold text-center">Blog.io</p>
                 </div>
                 <div className="m-2">
-                    <SideNavButton className="flex items-center my-2" route="/dashboard">
+                    <SideNavButton className={`flex items-center my-2 ${path === "/dashboard" ? "bg-secondary":""}`} route="/dashboard">
                         <LayoutDashboard className="w-4 h-4 mr-2" />
-                        <p className="text-md"> Dashboard</p>
+                        <p className="text-md"> Feed</p>
                     </SideNavButton>
-                    <SideNavButton className="flex items-center my-2" route="/dashboard">
+                    <SideNavButton className={`flex items-center my-2 ${path === "/published" ? "bg-secondary" : ""}`} route="/dashboard">
                         <NotebookPen className="w-4 h-4 mr-2" />
                         <p className="text-md"> Your Blogs</p>
                     </SideNavButton>
-                    <SideNavButton className="flex items-center my-2" route="/draft">
+                    <SideNavButton className={`flex items-center my-2 ${path === "/draft" ? "bg-secondary" : ""}`} route="/draft">
                         <BookDashed className="w-4 h-4 mr-2" />
                         <p className="text-md"> Drafts<span className="ml-2">1</span></p>
                     </SideNavButton>
-                    <SideNavButton className="flex items-center my-2" onClick={() => {
+                    <SideNavButton className={`flex items-center my-2`} onClick={() => {
                         console.log("entered");
                         setBlogStarter(true);
                     }}>

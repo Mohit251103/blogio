@@ -215,7 +215,7 @@ const Tiptap = ({ children, slug }: { children: React.ReactNode, slug: string | 
     }
 
 
-    if (!editor || !content.description) {
+    if (!editor || !content.title) {
         return <div className='text-center'>Loading...</div>
     }
 
