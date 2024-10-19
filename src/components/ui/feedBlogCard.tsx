@@ -7,7 +7,7 @@ import { Button } from "./button";
 const NormalRouteButton = (
     { children, slug }: { children: React.ReactNode, slug: string }
 ) => {
-    const handleSubmit = handleServerRedirect.bind(null, `/preview/${slug}`)
+    const handleSubmit = handleServerRedirect.bind(null, `/editor/preview/${slug}`)
     return (
         <form action={handleSubmit}>
             <Button variant="default" type="submit">
@@ -27,7 +27,7 @@ const FeedBlogCard = ({ title, slug, author }: {
     }
 }) => {
     return (
-        <Card className="w-fit flex lg:max-w-[40vw] max-w-[80vw]">
+        <Card className="sm:w-fit flex lg:max-w-[40vw] w-full">
             <div>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold">{title}</CardTitle>
