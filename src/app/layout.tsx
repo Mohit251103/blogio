@@ -57,7 +57,7 @@ export default function RootLayout({
           </Suspense>
           <Toaster />
         </ThemeProvider>
-        <script src="https://kit.fontawesome.com/af9022b38a.js" crossOrigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/af9022b38a.js" crossOrigin="anonymous" defer></script>
       </body>
     </html>
   );

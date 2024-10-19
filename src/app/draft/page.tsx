@@ -36,7 +36,7 @@ const Draft = async () => {
                 <div className="grow py-2 px-2">
                     <div className="w-full flex flex-wrap mx-auto gap-4">
                         {blogs?.map((blog) => {
-                            return <BlogCard key={blog.slug} slug={blog.slug} title={blog.title} description={blog.description} />
+                            return <BlogCard key={blog.slug} slug={blog.slug} title={blog.title} />
                         })}
                     </div>
                 </div>
