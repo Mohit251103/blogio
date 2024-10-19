@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { PopupProvider } from "@/context/popup-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { EditorProvider } from "@/context/editor-context";
+import { BlogProvider } from "@/context/blog-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,7 +45,9 @@ export default function RootLayout({
             <PopupProvider>
               <EdgeStoreProvider>
                 <EditorProvider>
-                  {children}
+                  <BlogProvider>
+                    {children}
+                  </BlogProvider>
                 </EditorProvider>
               </EdgeStoreProvider>
             </PopupProvider>

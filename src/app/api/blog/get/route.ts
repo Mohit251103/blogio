@@ -2,20 +2,63 @@ import { prisma } from "@/prisma";
 import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req:NextRequest) => {
+export const GET = async (req: NextRequest) => {
     try {
-        const slug = req.nextUrl.searchParams.get('slug');
-        const blog = await prisma.blog.findUnique({
-            where: {slug : slug as string}
-        })
+        const type = req.nextUrl.searchParams.get('type');
+        if (!type) {
+            const slug = req.nextUrl.searchParams.get('slug');
 
-        // console.log(blog);
+            const blog = await prisma.blog.findUnique({
+                where: { slug: slug as string }
+            })
 
-        if (!blog) {
-            return NextResponse.json({ message: "Blog not found", status: 404 });
+            // console.log(blog);
+
+            if (!blog) {
+                return NextResponse.json({ message: "Blog not found", status: 404 });
+            }
+            else {
+                return NextResponse.json({ data: { title: blog.title, description: blog.description }, message: "Blog found", status: 200 });
+            }
         }
-        else {
-            return NextResponse.json({ data: {title:blog.title, description:blog.description}, message: "Blog found", status: 200 });
+
+        if (type === "searched") {
+            const q = req.nextUrl.searchParams.get('q');
+
+            if (typeof q !== "string") {
+                throw new Error("Invalid request");
+            }
+
+            const blogs = await prisma.blog.findMany({
+                where: {
+                    OR: [
+                        {
+                            title: {
+                                contains: q,
+                                mode: "insensitive"
+                            },
+                        },
+                        {
+                            description: {
+                                contains: q,
+                                mode: "insensitive"
+                            }
+                        },
+                        {
+                            author: {
+                                name: {
+                                    contains: q,
+                                    mode: "insensitive"
+                                }
+                            }
+                        }
+                    ]
+                },
+                include: {
+                    author: true
+                }
+            })
+            return Response.json({ data: blogs, message: "Blogs fetched", status: 200 });
         }
     } catch (error) {
         // console.log(error);
