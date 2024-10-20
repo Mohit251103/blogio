@@ -11,15 +11,28 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { BookCheck, BookOpen } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { BlogContext } from "@/context/blog-context";
 import FeedBlogCard from "../ui/feedBlogCard";
+import axiosInstance from "@/lib/axiosInstance";
 
 
 const ContentArea = () => {
     const { data: session } = useSession();
-    const { blogs } = useContext(BlogContext);
-    console.log(blogs.length);
+    const { blogs, setBlogs } = useContext(BlogContext);
+    
+    const getBlogs = async () => {
+        try {
+            const res = await axiosInstance.get("/api/blog/get?type=feed");
+            setBlogs(res.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getBlogs(); 
+    },[])
     return (
         <div className="">
             <div className="w-full flex flex-wrap mx-auto gap-4">

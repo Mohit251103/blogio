@@ -50,7 +50,7 @@ const SideNav = () => {
                     </SideNavButton>
                     <SideNavButton className={`flex items-center my-2 ${path === "/draft" ? "bg-secondary" : ""}`} route="/draft">
                         <BookDashed className="w-4 h-4 mr-2" />
-                        <p className="text-md"> Drafts<span className="ml-2">1</span></p>
+                        <p className="text-md"> Drafts</p>
                     </SideNavButton>
                     <SideNavButton className={`flex items-center my-2`} onClick={() => {
                         setBlogStarter(true);
