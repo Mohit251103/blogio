@@ -107,7 +107,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
     const getBlog = async () => {
         try {
             const res = await axiosInstance.get(`/api/blog/get?slug=${slug}`);
-            setContent({ ...res.data.data, description: res.data.data.description });
+            setContent({ ...res.data.data, description: res.data.data.description?? '' });
         } catch (error) {
             console.log(error);
         }

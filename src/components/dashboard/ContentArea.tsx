@@ -45,7 +45,7 @@ const ContentArea = () => {
                 })
                 }
             </div>
-            <div className=""><p className="text-sm text-bold text-secondary-foreground text-center my-3">No Blogs Found</p></div>
+            {!blogs.length && <div className=""><p className="text-sm text-bold text-secondary-foreground text-center my-3">No Blogs Found</p></div>}
         </div>
     )
 }

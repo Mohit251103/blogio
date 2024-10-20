@@ -1,4 +1,3 @@
-import { auth } from "@/auth"
 import ContentArea from "@/components/dashboard/ContentArea";
 import Nav from "@/components/dashboard/Nav";
 import NewBlogStarter from "@/components/dashboard/NewBlogStarter";

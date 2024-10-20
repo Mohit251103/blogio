@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useSession } from "next-auth/react";
@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useFormStatus } from "react-dom";
 
 const formSchema = z.object({
     title: z.string().min(1,"Cannot be blank").max(50, "Cannot be more than 50 characters"),
@@ -27,6 +28,7 @@ const NewBlogStarter = () => {
         title: "",
         slug: ""
     })
+    const [loading, setLoading] = useState<boolean>(false);
 
     const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
@@ -44,20 +46,22 @@ const NewBlogStarter = () => {
         setBlog({ ...blog, [e.target.name]: e.target.value, slug:slug });
     }
 
+    
     const createBlog = async () => {
-        console.log("create blog");
         try {
+            setLoading(true);
             const updatedBlog = {...blog, slug: blog.slug + session?.user?.id};
-            const res = await axiosInstance.post('/api/blog/c', updatedBlog);
+            await axiosInstance.post('/api/blog/c', updatedBlog);
             toast({
                 title: "Blog Created"
             })
             router.push(`/editor/new?slug=${updatedBlog.slug}`);
+            setLoading(false);
         } catch (error) {
             console.log(error);
+            setLoading(false);
         }
     }
-
 
     return (
         <div className={`absolute top-0 w-[100vw] h-[100vh] bg-black backdrop-blur-sm bg-opacity-80 flex justify-center items-center ${!blogStarter ? "hidden" : ""} z-50`}>
@@ -73,7 +77,10 @@ const NewBlogStarter = () => {
                     <Label htmlFor="slug">Slug</Label>
                     <Input {...register("slug")} type="text" id="slug" placeholder="Slug" name="slug" value={blog.slug} disabled />
 
-                    <Button type="submit" className="my-2">Create</Button>
+                    <Button type="submit" className="my-2" disabled={loading}>
+                        {loading ? 'Creating...' : 'Create'}
+                    </Button>
+
                 </form>
             </div>
         </div>

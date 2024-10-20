@@ -34,7 +34,7 @@ const DeleteButton = (
 const BlogCard = async ({ slug, title }: { slug: string, title: string }) => {
     return (
 
-        <Card className="w-fit flex max-w-[40vw]">
+        <Card className="w-fit flex min-w-fit max-w-[40vw]">
             <div>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold">{title}</CardTitle>
