@@ -198,7 +198,8 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
             return;
         }
 
-        console.log(editor.getText().endsWith('/'));
+        console.log("is ending with / : ",editor.getText().endsWith('/'));
+        console.log("editor will show up : ",editorMenu);
 
         if (event.key === "/" || editor.getText().endsWith("/")) {
             const { head } = editor?.state.selection;
@@ -221,7 +222,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
     return (
         <>
             {
-                editorMenu && <div className={`z-10 rounded-md bg-background text-foreground shadow-sm shadow-foreground absolute`} style={{ top: `${position.top}px`, left: `${position.left + 1}px` }}>
+                editorMenu && <div className={`z-50 rounded-md bg-background text-foreground shadow-sm shadow-foreground absolute`} style={{ top: `${position.top}px`, left: `${position.left + 1}px` }}>
                     <EditorMenu editor={editor} />
                 </div>
             }
