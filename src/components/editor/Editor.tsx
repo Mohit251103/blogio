@@ -200,7 +200,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
 
         console.log(editor.getText().endsWith('/'));
 
-        if (event.key === "/") {
+        if (event.key === "/" || editor.getText().endsWith("/")) {
             const { head } = editor?.state.selection;
             const resolvedPos = editor?.view.coordsAtPos(head);  // Get coordinates of the caret
 
