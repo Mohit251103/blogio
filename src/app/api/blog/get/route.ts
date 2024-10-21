@@ -61,7 +61,13 @@ export const GET = async (req: NextRequest) => {
         }
 
         if (type === "feed") {
-            const blogs = await prisma.blog.findMany({ include: { author: true } });
+            const blogs = await prisma.blog.findMany({
+                where: {
+                    isPublished: true
+                },
+                include: { author: true }
+            }
+            );
             return Response.json({ data: blogs, message: "Blogs fetched", status: 200 });
         }
     } catch (error) {

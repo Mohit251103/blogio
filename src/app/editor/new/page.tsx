@@ -13,7 +13,7 @@ const Editor = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const handleClick = () => {
-        router.push("/dashboard");
+        window.history.back();
     }
 
     if (!session) {

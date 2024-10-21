@@ -39,7 +39,7 @@ const EditorMenu = ({ editor }: { editor: any }) => {
         }
     }, [editor, edgestore.publicFiles]);
 
-    return <div className={`w-[35vw] md:w-[15vw] h-[30vh] rounded-md bg-card text-card-foreground p-2 overflow-y-auto z-100`}>
+    return <div className={`w-[45vw] md:w-[20vw] h-[30vh] rounded-md bg-card text-card-foreground p-2 overflow-y-auto z-100`}>
         <p className='text-card-foreground font-bold text-xs'>Basic Blocks</p>
         <div className='flex items-center hover:bg-gray-500/50 hover:opacity-80 rounded-md hover:cursor-pointer p-1 text-left'
             onClick={() => { editor.chain().focus().toggleHeading({ level: 1 }).run() }}>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
+import React from "react";
 
 export const handleDelete = async (slug:string) => {
     "use server";
@@ -18,6 +19,22 @@ export const handleDelete = async (slug:string) => {
 
 export const handleServerRedirect = async (route: string) => {
     "use server";
-    console.log(route);
     redirect(route);
+}
+
+export const publishBlog = async (slug:string) => {
+    try {
+        if (slug === "") {
+            console.log("slug:", slug);
+            throw new Error("Slug is not provided");
+        }
+        await prisma.blog.update({
+            where: { slug: slug },
+            data: {
+                isPublished: true
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
 }
