@@ -1,3 +1,2 @@
-Have to add search functionality to drafts page also and your blogs page full
 profile page
 preview page improvements (author details, subscribe button, like, share etc.)

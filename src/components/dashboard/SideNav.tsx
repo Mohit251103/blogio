@@ -53,7 +53,7 @@ const SideNav = () => {
                     </SideNavButton>
                     <SideNavButton className={`flex items-center my-2 ${path === "/published" ? "bg-secondary" : ""}`} route="/dashboard">
                         <NotebookPen className="w-4 h-4 mr-2" />
-                        <p className="text-md"> Your Blogs</p>
+                        <p className="text-md"> Published</p>
                     </SideNavButton>
                     <SideNavButton className={`flex items-center my-2 ${path === "/draft" ? "bg-secondary" : ""}`} route="/draft">
                         <BookDashed className="w-4 h-4 mr-2" />

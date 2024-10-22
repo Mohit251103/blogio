@@ -9,6 +9,7 @@ import { EdgeStoreProvider } from "@/lib/edgestore";
 import { EditorProvider } from "@/context/editor-context";
 import { BlogProvider } from "@/context/blog-context";
 import { Suspense } from "react";
+import NewBlogStarter from "@/components/dashboard/NewBlogStarter";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -48,6 +49,7 @@ export default function RootLayout({
                 <EdgeStoreProvider>
                   <EditorProvider>
                     <BlogProvider>
+                      <NewBlogStarter />
                       {children}
                     </BlogProvider>
                   </EditorProvider>

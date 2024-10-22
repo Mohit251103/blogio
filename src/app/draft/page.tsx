@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import Nav from "@/components/dashboard/Nav";
 import SideNav from "@/components/dashboard/SideNav";
 import ContentArea from "@/components/draft/ContentArea";

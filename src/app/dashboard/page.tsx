@@ -1,12 +1,10 @@
 import ContentArea from "@/components/dashboard/ContentArea";
 import Nav from "@/components/dashboard/Nav";
-import NewBlogStarter from "@/components/dashboard/NewBlogStarter";
 import SideNav from "@/components/dashboard/SideNav";
 
 const Dashboard = async () => {
     return (
         <div className="flex justify-center items-center flex-col min-h-screen">
-            <NewBlogStarter/>
             <Nav origin="feed"/>
             <div className="flex h-full w-full grow">
                 <SideNav />
