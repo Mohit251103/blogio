@@ -27,7 +27,7 @@ const FeedBlogCard = ({ title, slug, author }: {
     }
 }) => {
     return (
-        <Card className="sm:w-fit flex lg:max-w-[40vw] w-full">
+        <Card className=" flex w-full">
             <div>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold">{title}</CardTitle>

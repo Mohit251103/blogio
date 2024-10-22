@@ -6,10 +6,13 @@ const Dashboard = async () => {
     return (
         <div className="flex justify-center items-center flex-col min-h-screen">
             <Nav origin="feed"/>
-            <div className="flex h-full w-full grow">
+            <div className="flex w-full grow">
                 <SideNav />
-                <div className="grow py-2 px-2">
-                    <ContentArea/>
+                <div className="grow">
+                    <div className="w-fit border-r h-[92vh] overflow-y-auto relative">
+                        <div className="bg-black bg-opacity-80 backdrop-blur-sm sticky top-0 text-xl flex items-center justify-center font-extrabold h-[8vh] py-2 mb-2">Blogs for You</div>
+                        <ContentArea />
+                    </div>
                 </div>
             </div>
         </div>

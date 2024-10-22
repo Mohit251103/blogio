@@ -34,9 +34,9 @@ const ContentArea = () => {
         getBlogs(); 
     },[])
     return (
-        <div className="">
-            <div className="w-full flex flex-wrap mx-auto gap-4">
-                <Card className="w-fit flex">
+        <>
+            <div className="w-full lg:w-[45vw] flex flex-wrap gap-4 overflow-y-auto grow lg:mx-2 max-lg:px-2">
+                <Card className="w-full flex">
                     <div>
                         <CardHeader>
                             <CardTitle>Welcome, {session?.user?.name}</CardTitle>
@@ -59,7 +59,7 @@ const ContentArea = () => {
                 }
             </div>
             {!blogs.length && <div className=""><p className="text-sm text-bold text-secondary-foreground text-center my-3">No Blogs Found</p></div>}
-        </div>
+        </>
     )
 }
 

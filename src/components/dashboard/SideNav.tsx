@@ -38,7 +38,7 @@ const SideNav = () => {
     })
 
     return (
-        <div className={`flex flex-col justify-between items-center border-r mr-2 ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400 lg:min-w-[15vw]`}>
+        <div className={`flex flex-col justify-between items-center border-r ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] lg:h-[92vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400 lg:min-w-[15vw] fixed left-0`}>
             <div className="">
                 <div className={`lg:hidden absolute top-1 right-1`} onClick={()=>setSideNav(false)}>
                     <X/>

@@ -23,7 +23,7 @@ const ProfileButton = () => {
 const Nav = async ({ origin }: { origin: string }) => {
     const session = await auth();
     return (
-        <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden">
+        <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden sticky top-0">
             <div className="ml-2 max-sm:ml-1 flex">
                 <Hamburger />
                 <p className="text-2xl max-lg:hidden font-extrabold my-auto">Blog.io</p>
