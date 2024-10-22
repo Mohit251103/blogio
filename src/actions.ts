@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
 import React from "react";
+import { auth } from "./auth";
 
 export const handleDelete = async (slug:string) => {
     "use server";
@@ -34,6 +35,22 @@ export const publishBlog = async (slug:string) => {
                 isPublished: true
             }
         })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getDrafts = async () => {
+    "use server";
+    const session = await auth();
+    try {
+        const blogs = await prisma.blog.findMany({
+            where: {
+                userId: session?.user?.id,
+                isPublished: false
+            }
+        })
+        return blogs;
     } catch (error) {
         console.log(error);
     }

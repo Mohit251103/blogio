@@ -4,7 +4,7 @@ import Image from "next/image";
 import Hamburger from "../ui/hamburger";
 import SearchComponent from "@/components/dashboard/Search"
 
-const Nav = async () => {
+const Nav = async ({origin}:{origin:string}) => {
     const session = await auth();
     return (
         <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden">
@@ -14,7 +14,7 @@ const Nav = async () => {
                 <p className="lg:hidden text-md font-extrabold">B.io</p>
             </div>
             <div className="flex justify-center items-center">
-                <SearchComponent/>
+                <SearchComponent origin={origin} />
                 <ModeToggle />
                 <div className="">
                     <Image src={session?.user?.image as string} className="rounded-md border mx-2 max-sm:w-[25px] max-sm:h-[25px]" alt="profile" width={35} height={35} />

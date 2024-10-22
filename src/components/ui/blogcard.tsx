@@ -31,7 +31,7 @@ const DeleteButton = (
     )
 }
 
-const BlogCard = async ({ slug, title }: { slug: string, title: string }) => {
+const BlogCard = ({ slug, title }: { slug: string, title: string }) => {
     return (
 
         <Card className="w-fit flex min-w-fit max-w-[40vw]">

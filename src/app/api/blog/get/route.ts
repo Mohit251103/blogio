@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
     try {
         const type = req.nextUrl.searchParams.get('type');
+        const origin = req.nextUrl.searchParams.get('from');
+        console.log(origin);
         if (!type) {
             const slug = req.nextUrl.searchParams.get('slug');
 
@@ -50,8 +52,9 @@ export const GET = async (req: NextRequest) => {
                                     mode: "insensitive"
                                 }
                             }
-                        }
-                    ]
+                        },
+                    ],
+                    isPublished: origin==="feed"
                 },
                 include: {
                     author: true
