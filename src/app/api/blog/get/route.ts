@@ -54,7 +54,7 @@ export const GET = async (req: NextRequest) => {
                             }
                         },
                     ],
-                    isPublished: origin==="feed"
+                    isPublished: origin==="feed" || origin==="publish"
                 },
                 include: {
                     author: true

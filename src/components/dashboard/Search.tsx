@@ -9,13 +9,13 @@ import { BlogContext } from "@/context/blog-context";
 const SearchComponent = ({origin}:{origin:string}) => {
 
     const [search, setSearch] = useState("");
-    const { setBlogs, setDrafts } = useContext(BlogContext);
+    const { setBlogs, setDrafts, setPublished } = useContext(BlogContext);
     const searchSubmit = async (e:FormEvent) => {
         e.preventDefault();
         try {
             const encodedSearchQuery = encodeURI(search);
             const res = await axiosInstance.get(`/api/blog/get?q=${encodedSearchQuery}&type=searched&from=${origin}`);
-            origin==="feed"?setBlogs(res.data.data): origin==="draft"?setDrafts(res.data.data): undefined;
+            origin==="feed"?setBlogs(res.data.data): origin==="draft"?setDrafts(res.data.data): origin==="publish"? setPublished(res.data.data): undefined;
         } catch (error) {
             console.log(error);
         }
