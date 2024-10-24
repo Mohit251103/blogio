@@ -20,9 +20,6 @@ const SideNav = () => {
     // const handleSubmit = async () => {
     // }
 
-    const handleLogOut = async () => {
-        await signOut({ redirect: true, redirectTo: "/sign-in" });
-    }
 
     const { sideNav, setSideNav, setBlogStarter } = useContext(PopupContext)
 
@@ -83,9 +80,7 @@ const SideNav = () => {
                 </div>
             </div>
             <div className="flex flex-col items-center mb-2">
-                <form action={handleLogOut}>
-                    <Button type="submit">Log Out</Button>
-                </form>
+                
             </div>
         </div>
     )

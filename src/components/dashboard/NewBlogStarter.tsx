@@ -24,7 +24,7 @@ const NewBlogStarter = () => {
     const router = useRouter();
     const { data: session } = useSession();
     const [blog, setBlog] = useState({
-        userId: session?.user?.id,
+        userId: "",
         title: "",
         slug: ""
     })
@@ -50,13 +50,14 @@ const NewBlogStarter = () => {
     const createBlog = async () => {
         try {
             setLoading(true);
-            const updatedBlog = {...blog, slug: blog.slug + session?.user?.id};
+            const updatedBlog = {...blog, userId: session?.user?.id, slug: blog.slug + session?.user?.id};
             await axiosInstance.post('/api/blog/c', updatedBlog);
             toast({
                 title: "Blog Created"
             })
             router.push(`/editor/new?slug=${updatedBlog.slug}`);
             setLoading(false);
+            setBlogStarter(false);
         } catch (error) {
             console.log(error);
             setLoading(false);

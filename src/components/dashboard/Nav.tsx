@@ -1,4 +1,4 @@
-import { auth } from "@/auth"
+import { auth, signOut } from "@/auth"
 import { ModeToggle } from "../ui/theme"
 import Image from "next/image";
 import Hamburger from "../ui/hamburger";
@@ -22,6 +22,10 @@ const ProfileButton = () => {
 
 const Nav = async ({ origin }: { origin: string }) => {
     const session = await auth();
+    const handleLogOut = async () => {
+        "use server";
+        await signOut({ redirect: true, redirectTo: "/sign-in" });
+    }
     return (
         <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden sticky top-0">
             <div className="ml-2 max-sm:ml-1 flex">
@@ -41,8 +45,12 @@ const Nav = async ({ origin }: { origin: string }) => {
                         <DropdownMenuItem><Settings className="w-4 h-4 mr-1" /> Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="flex flex-col">
-                            <p className="flex flex-start w-full my-1"><LogOutIcon className="w-4 h-4 mr-1" /> Sign-Out</p>
-                            <p className="text-xs text-secondary-foreground">{session?.user?.email?.substring(0, 5) + "***" + session?.user?.email?.substring(session.user.email.length - 9)}</p>
+                            <form action={handleLogOut}>
+                                <button type="submit" className="bg-none">
+                                    <p className="flex flex-start w-full my-1"><LogOutIcon className="w-4 h-4 mr-1" /> Sign-Out</p>
+                                    <p className="text-xs text-secondary-foreground">{session?.user?.email?.substring(0, 5) + "***" + session?.user?.email?.substring(session.user.email.length - 9)}</p>
+                                </button>
+                            </form>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

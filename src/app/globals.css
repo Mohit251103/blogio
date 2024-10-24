@@ -291,3 +291,13 @@ blockquote {
   padding-left: 1rem;
   font-style: italic;
 }
+
+table{
+  border: 1px solid;
+}
+table>tbody>tr>th{
+  border: 1px solid;
+}
+table>tbody>tr>td{
+  border: 1px solid;
+}

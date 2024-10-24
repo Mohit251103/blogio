@@ -34,7 +34,7 @@ const DeleteButton = (
 const BlogCard = ({ slug, title }: { slug: string, title: string }) => {
     return (
 
-        <Card className="w-fit flex min-w-fit max-w-[40vw]">
+        <Card className="flex w-1/2">
             <div>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold">{title}</CardTitle>
@@ -44,9 +44,9 @@ const BlogCard = ({ slug, title }: { slug: string, title: string }) => {
                     <DeleteButton slug={slug} ><Trash2 className="mr-1 w-4 h-4" />Delete</DeleteButton>
                 </CardFooter>
             </div>
-            <CardContent className="my-auto mx-auto min-w-[100px]">
+            {/* <CardContent className="my-auto mx-auto min-w-[100px]">
                 <Image src="/profile.png" alt="Card Image" width={100} height={100} />
-            </CardContent>
+            </CardContent> */}
         </Card>
     )
 }
