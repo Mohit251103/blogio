@@ -6,7 +6,7 @@ const Dashboard = async () => {
     return (
         <div className="flex justify-center items-center flex-col min-h-screen">
             <Nav origin="feed"/>
-            <div className="flex w-full grow">
+            <div className="flex w-full grow overflow-hidden">
                 <SideNav />
                 <div className="grow">
                     <div className="w-fit border-r h-[92vh] overflow-y-auto relative">

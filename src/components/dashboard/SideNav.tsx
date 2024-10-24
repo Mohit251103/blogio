@@ -35,8 +35,8 @@ const SideNav = () => {
     })
 
     return (
-        <div className={`flex flex-col justify-between items-center border-r ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] lg:h-[92vh] max-lg:bg-background overflow-y-auto relative max-lg:transition-all max-lg:ease-out max-lg:duration-400 lg:min-w-[15vw] fixed left-0`}>
-            <div className="">
+        <div className={`flex flex-col justify-between items-center border-r ${!sideNav ? "max-lg:w-0" : "max-lg:w-52 z-50"} max-lg:absolute max-lg:top-0 max-lg:h-[100vh] lg:h-[92vh] max-lg:bg-background overflow-y-auto max-lg:transition-all max-lg:ease-out max-lg:duration-400 lg:min-w-[15vw] sticky left-0`}>
+            <div className="w-full h-full relative">
                 <div className={`lg:hidden absolute top-1 right-1`} onClick={()=>setSideNav(false)}>
                     <X/>
                 </div>
@@ -48,7 +48,7 @@ const SideNav = () => {
                         <LayoutDashboard className="w-4 h-4 mr-2" />
                         <p className="text-md"> Feed</p>
                     </SideNavButton>
-                    <SideNavButton className={`flex items-center my-2 ${path === "/published" ? "bg-secondary" : ""}`} route="/dashboard">
+                    <SideNavButton className={`flex items-center my-2 ${path === "/published" ? "bg-secondary" : ""}`} route="/published">
                         <NotebookPen className="w-4 h-4 mr-2" />
                         <p className="text-md"> Published</p>
                     </SideNavButton>
@@ -78,9 +78,6 @@ const SideNav = () => {
                         </SelectContent>
                     </Select>
                 </div>
-            </div>
-            <div className="flex flex-col items-center mb-2">
-                
             </div>
         </div>
     )

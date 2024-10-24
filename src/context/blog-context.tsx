@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useState } from "react";
+import React, { createContext, SetStateAction, useState } from "react";
 
 interface blog {
     id: string,
@@ -9,7 +9,7 @@ interface blog {
     author: any
 }
 
-interface IDraft {
+interface IDraftPublished {
     id: string,
     title: string,
     slug: string
@@ -20,22 +20,28 @@ interface BlogContextType {
 
     setBlogs: React.Dispatch<React.SetStateAction<any[]>>,
 
-    drafts: IDraft[],
-    setDrafts: React.Dispatch<React.SetStateAction<IDraft[]>>
+    drafts: IDraftPublished[],
+    setDrafts: React.Dispatch<React.SetStateAction<IDraftPublished[]>>
+
+    published: IDraftPublished[],
+    setPublished: React.Dispatch<React.SetStateAction<IDraftPublished[]>>
 }
 
 const BlogContext = createContext<BlogContextType>({
     blogs: [],
     setBlogs: () => { },
     drafts: [],
-    setDrafts: () => { }
+    setDrafts: () => { },
+    published: [],
+    setPublished: () => { }
 });
 
 const BlogProvider = ({ children }: { children: React.ReactNode }) => {
     const [blogs, setBlogs] = useState<blog[]>([])
-    const [drafts, setDrafts] = useState<IDraft[]>([])
+    const [drafts, setDrafts] = useState<IDraftPublished[]>([])
+    const [published, setPublished] = useState<IDraftPublished[]>([])
     return (
-        <BlogContext.Provider value={{blogs, setBlogs, drafts, setDrafts}}>
+        <BlogContext.Provider value={{blogs, setBlogs, drafts, setDrafts, published, setPublished}}>
             {children}
         </BlogContext.Provider>
     )

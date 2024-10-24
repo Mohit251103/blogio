@@ -4,11 +4,11 @@ import ContentArea from "@/components/draft/ContentArea";
 
 const Draft = async () => {
     return (
-        <div className="flex justify-center items-center flex-col min-h-screen">
+        <div className="flex justify-center items-center flex-col min-h-screen overflow-hidden">
             <Nav origin={"draft"} />
-            <div className="flex h-full w-full grow">
+            <div className="flex w-full grow overflow-hidden">
                 <SideNav />
-                <ContentArea/>
+                <ContentArea origin="draft"/>
             </div>
         </div>
     )

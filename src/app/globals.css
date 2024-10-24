@@ -97,6 +97,14 @@ body {
     @apply bg-background text-foreground;
   }
 
+    ::-webkit-scrollbar {
+      @apply appearance-none bg-background w-2
+    }
+
+    ::-webkit-scrollbar-thumb{
+      @apply rounded-lg bg-secondary
+    }
+
   .ProseMirror {
     @apply bg-background text-foreground p-12 px-8 sm:px-12
   }

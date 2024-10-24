@@ -55,3 +55,19 @@ export const getDrafts = async () => {
         console.log(error);
     }
 }
+
+export const getPublished = async () => {
+    "use server";
+    const session = await auth();
+    try {
+        const blogs = await prisma.blog.findMany({
+            where: {
+                userId: session?.user?.id,
+                isPublished: true
+            }
+        })
+        return blogs;
+    } catch (error) {
+        console.log(error);
+    }
+}
