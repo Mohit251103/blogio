@@ -9,15 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -30,10 +30,10 @@ model User {
   Like      Like[]
 }
 
-model Subscriber{
-  userId String 
+model Subscriber {
+  userId       String
   subscriberId String
-  user User @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
   subscribedAt DateTime @default(now())
 
   @@unique([userId, subscriberId])
@@ -79,14 +79,15 @@ model VerificationToken {
 }
 
 model Blog {
-  id          String @id @default(cuid())
-  userId      String 
+  id          String       @id @default(cuid())
+  userId      String
   title       String
-  slug        String @unique
+  slug        String       @unique
   description String
-  author      User   @relation(fields: [userId], references: [id])
+  tags        Tag[]
+  author      User         @relation(fields: [userId], references: [id])
   Like        Like[]
-  isPublished Boolean @default(false)
+  isPublished Boolean      @default(false)
 }
 
 model Like {
@@ -99,4 +100,10 @@ model Like {
   likedAt DateTime @default(now())
 
   @@unique([userId, blogId])
+}
+
+model Tag {
+  id     String       @id @default(cuid())
+  name   String
+  blogs  Blog[]
 }

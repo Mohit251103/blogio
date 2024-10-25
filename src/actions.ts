@@ -71,3 +71,19 @@ export const getPublished = async () => {
         console.log(error);
     }
 }
+
+export const getTags = async (name: string) => {
+    "use server";
+    try {
+        const tags = await prisma.tag.findMany({
+            where: {
+                name: {
+                    contains: name
+                }
+            }
+        })
+        return tags;
+    } catch (error) {
+        console.log(error);
+    }
+}
