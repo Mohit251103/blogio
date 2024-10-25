@@ -127,7 +127,7 @@ const NewBlogStarter = () => {
                 <div className="absolute top-1 right-1" onClick={() => setBlogStarter(false)}>
                     <X />
                 </div>
-                <form className="w-[25vw]" onSubmit={handleSubmit(createBlog)}>
+                <form className="max-sm:w-[80vw] max-md:w-[55vw] max-lg:w-[55vw] xl:w-[30vw]" onSubmit={handleSubmit(createBlog)}>
                     <Label htmlFor="title">Title*</Label>
                     <Input {...register("title")} type="text" id="title" placeholder="Blog title" name="title" value={blog.title} onChange={handleChange} />
                     {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
