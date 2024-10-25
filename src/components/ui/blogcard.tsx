@@ -21,9 +21,10 @@ const NormalRouteButton = (
 const DeleteButton = (
     { children, slug }: { children: React.ReactNode, slug: string }
 ) => {
-    const handleDeleteBind = handleDelete.bind(null, slug);
+    // const handleDeleteBind = handleDelete.bind(null, slug);
     return (
-        <form action={handleDeleteBind}>
+        <form action={handleDelete}>
+            <input type="hidden" name="slug" value={slug} />
             <Button type="submit">
                 {children}
             </Button>

@@ -3,16 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
-import React from "react";
 import { auth } from "./auth";
 
-export const handleDelete = async (slug:string) => {
+export const handleDelete = async (formData:FormData) => {
     "use server";
+    console.log(formData.get('slug'));
     try {
         await prisma.blog.delete({
-            where: { slug: slug }
+            where: { slug: formData.get('slug') as string }
         })
-        revalidatePath('/draft');
+        console.log("reached");
+        revalidatePath('/draft/page');
     } catch (error) {
         console.log(error);
     }

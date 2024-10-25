@@ -108,6 +108,14 @@ const NewBlogStarter = () => {
                 title: "Blog Created"
             })
             router.push(`/editor/new?slug=${updatedBlog.slug}`);
+            setBlog({
+                ...blog,
+                title: "",
+                slug: "",
+                tag: []
+            })
+            setSearchTag([])
+            setTagInput("")
             setLoading(false);
             setBlogStarter(false);
         } catch (error) {
@@ -137,28 +145,37 @@ const NewBlogStarter = () => {
 
                     <Label htmlFor="tags">Tags</Label>
                     <Input type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} />
-                    {(showSearchResult && searchTag.length>0) && <div className="rounded-md p-2 h-[200px]">
+                    {(showSearchResult && searchTag.length > 0) && <div className="rounded-md p-2 h-fit flex flex-wrap gap-2 bg-secondary mt-2">
                         {searchTag.map((tag, index) => {
-                            return <button key={index} className="bg-none w-full" onClick={() => addTag(tag)}>{tag.name}</button>
-                        } )}
+                            return <button key={index} className="w-fit bg-background p-1 rounded-sm" onClick={(e) => {
+                                e.preventDefault();
+                                addTag(tag)
+                            }}>{tag.name}</button>
+                        })}
                     </div>
                     }
                     {blog.tag && <div className="p-2 w-full flex flex-wrap">
                         {blog.tag.map((tag, index) => {
                             return <p key={index} className="text-xs p-2 rounded-md bg-secondary text-secondary-foreground relative mx-1 group">
-                                <button className="absolute top-0 left-0 rounded-full opacity-0 transition-opacity duration-100 group-hover:opacity-100 bg-secondary" onClick={() => setBlog({ ...blog,tag: [...blog.tag.filter((tag, idx) => idx != index)] })}><X className="w-2 h-2 rounded-full"/></button>
-                                {tag.name}
+                                <button className="absolute top-0 left-0 rounded-full opacity-0 transition-opacity duration-100 group-hover:opacity-100 bg-secondary" onClick={(e) => {
+                                    e.preventDefault();
+                                    setBlog({
+                                        ...blog, tag: [...blog.tag.filter((tag, idx) => idx != index)] 
+                                    })}
+                                }>
+                                <X className="w-2 h-2 rounded-full" /></button>
+                            { tag.name }
                             </p>
-                        })}
-                    </div>}
+                    })}
+            </div>}
 
-                    <Button type="submit" className="my-2" disabled={loading}>
-                        {loading ? 'Creating...' : 'Create'}
-                    </Button>
+            <Button type="submit" className="my-2" disabled={loading}>
+                {loading ? 'Creating...' : 'Create'}
+            </Button>
 
-                </form>
-            </div>
-        </div>
+        </form>
+            </div >
+        </div >
     )
 }
 
