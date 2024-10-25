@@ -84,7 +84,8 @@ const NewBlogStarter = () => {
 
     const handleKeyUp = async (e: any) => {
         debouncedSearch(e.target.value);
-        if (e.key === "Enter") {
+        console.log(e.key);
+        if (e.key === "Enter" && e.target.value) {
             console.log("enter");
             setBlog({
                 ...blog,
@@ -93,6 +94,7 @@ const NewBlogStarter = () => {
                     name: e.target.value
                 }]
             })
+            setTagInput("");
         }
     }
 
@@ -114,13 +116,18 @@ const NewBlogStarter = () => {
         }
     }
 
+    const addTag = (tag: ITag) => {
+        setBlog({ ...blog, tag: [...blog.tag, { id: tag.id, name: tag.name }] })
+        setTagInput("");
+    }
+
     return (
         <div className={`absolute top-0 w-[100vw] h-[100vh] bg-black backdrop-blur-sm bg-opacity-80 flex justify-center items-center ${!blogStarter ? "hidden" : ""} z-50`}>
             <div className="w-fit h-fit p-3 bg-background text-foreground relative rounded-md ">
                 <div className="absolute top-1 right-1" onClick={() => setBlogStarter(false)}>
                     <X />
                 </div>
-                <form onSubmit={handleSubmit(createBlog)}>
+                <form className="w-[25vw]" onSubmit={handleSubmit(createBlog)}>
                     <Label htmlFor="title">Title*</Label>
                     <Input {...register("title")} type="text" id="title" placeholder="Blog title" name="title" value={blog.title} onChange={handleChange} />
                     {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
@@ -129,14 +136,17 @@ const NewBlogStarter = () => {
                     <Input {...register("slug")} type="text" id="slug" placeholder="Slug" name="slug" value={blog.slug} disabled />
 
                     <Label htmlFor="tags">Tags</Label>
-                    <Input type="text" placeholder="Write a tag and press enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} />
-                    {showSearchResult && <div className="">
-
+                    <Input type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} />
+                    {(showSearchResult && searchTag.length>0) && <div className="rounded-md p-2 h-[200px]">
+                        {searchTag.map((tag, index) => {
+                            return <button key={index} className="bg-none w-full" onClick={() => addTag(tag)}>{tag.name}</button>
+                        } )}
                     </div>
                     }
                     {blog.tag && <div className="p-2 w-full flex flex-wrap">
                         {blog.tag.map((tag, index) => {
-                            return <p key={index} className="text-xs p-2 rounded-md bg-secondary text-secondary-foreground">
+                            return <p key={index} className="text-xs p-2 rounded-md bg-secondary text-secondary-foreground relative mx-1 group">
+                                <button className="absolute top-0 left-0 rounded-full opacity-0 transition-opacity duration-100 group-hover:opacity-100 bg-secondary" onClick={() => setBlog({ ...blog,tag: [...blog.tag.filter((tag, idx) => idx != index)] })}><X className="w-2 h-2 rounded-full"/></button>
                                 {tag.name}
                             </p>
                         })}
