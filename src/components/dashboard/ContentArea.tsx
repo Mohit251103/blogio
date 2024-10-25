@@ -19,6 +19,7 @@ import axiosInstance from "@/lib/axiosInstance";
 
 const ContentArea = () => {
     const { data: session } = useSession();
+    console.log(session?.user);
     const { blogs, setBlogs } = useContext(BlogContext);
     
     const getBlogs = async () => {

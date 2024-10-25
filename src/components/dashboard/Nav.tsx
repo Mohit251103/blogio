@@ -27,7 +27,7 @@ const Nav = async ({ origin }: { origin: string }) => {
         await signOut({ redirect: true, redirectTo: "/sign-in" });
     }
     return (
-        <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden sticky top-0 bg-opacity-60 backdrop-blur-sm z-50">
+        <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden sticky top-0 bg-opacity-60 backdrop-blur-sm z-40">
             <div className="ml-2 max-sm:ml-1 flex">
                 <Hamburger />
                 <p className="text-2xl max-lg:hidden font-extrabold my-auto">Blog.io</p>

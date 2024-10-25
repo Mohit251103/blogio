@@ -1,6 +1,7 @@
 import ContentArea from "@/components/dashboard/ContentArea";
 import Nav from "@/components/dashboard/Nav";
 import SideNav from "@/components/dashboard/SideNav";
+import SubContent from "@/components/dashboard/SubContent";
 
 const Dashboard = async () => {
     return (
@@ -14,6 +15,7 @@ const Dashboard = async () => {
                         <ContentArea />
                     </div>
                 </div>
+                <SubContent />
             </div>
         </div>
     )
