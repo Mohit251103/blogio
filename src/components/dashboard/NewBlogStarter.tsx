@@ -68,22 +68,32 @@ const NewBlogStarter = () => {
         setTagInput(e.target.value);
     }
 
-    const debouncedSearch = useCallback((tagInput: string) => {
-        const timeout = setTimeout(async (tagInput: string) => {
+    const debouncedSearch = useCallback((callback: (value: any) => void, delay: number) => {
+        let timeout: NodeJS.Timeout;
+        return (value: any) => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(() => {
+                callback(value)
+            }, delay);
+        }
+
+    }, []); // this one is for preventing unncessary creation
+
+    const debounceCallback = useCallback(
+        debouncedSearch(async (tagInput: string) => {
+            console.log("debounced...")
             const tags = await getTags(tagInput);
             if (tags) {
                 setSearchTag([...tags]);
                 setShowSearchResult(true);
             }
-        }, 200);
-
-        return () => {
-            clearTimeout(timeout);
-        }
-    }, [tagInput]);
+        }, 200)
+        , [debouncedSearch]) // this one is to debounce api calls
 
     const handleKeyUp = async (e: any) => {
-        debouncedSearch(e.target.value);
+        debounceCallback(e.target.value);
         console.log(e.key);
         if (e.key === "Enter" && e.target.value) {
             console.log("enter");
