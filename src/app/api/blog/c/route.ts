@@ -31,7 +31,7 @@ export const POST = async (req:Request) => {
             })
         }
         else {
-            blogData = await prisma.blog.create({
+            blogData = tags!==null ? await prisma.blog.create({
                 data: {
                     ...data,
                     title: body.title,
@@ -39,7 +39,14 @@ export const POST = async (req:Request) => {
                         create: tags
                     }
                 }
-            })
+            }) : 
+                await prisma.blog.create({
+                    data: {
+                        ...data,
+                        title: body.title
+                    }
+                })
+                
         }
 
         return NextResponse.json({ data: blogData, message: "successfully reached", status: 200 });

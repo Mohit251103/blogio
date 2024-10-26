@@ -5,15 +5,16 @@ import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
 
-export const handleDelete = async (formData:FormData) => {
+export const handleDelete = async (formData:FormData, origin: string) => {
     "use server";
     console.log(formData.get('slug'));
     try {
         await prisma.blog.delete({
-            where: { slug: formData.get('slug') as string }
-        })
-        console.log("reached");
-        revalidatePath('/draft/page');
+            where: {
+                slug: formData.get('slug') as string,
+                isPublished: origin==="publish"
+             }
+        });
     } catch (error) {
         console.log(error);
     }
