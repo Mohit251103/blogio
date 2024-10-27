@@ -94,7 +94,7 @@ const NewBlogStarter = () => {
 
     const handleKeyUp = async (e: any) => {
         debounceCallback(e.target.value);
-        console.log(e.key);
+        console.log(e.code);
         if (e.key === "Enter" && e.target.value) {
             console.log("enter");
             setBlog({
