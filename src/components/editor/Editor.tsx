@@ -169,10 +169,8 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
         try {
             setDrafting(true);
             const res = await axiosInstance.post("/api/blog/c", { editorState, slug: slug, userId: session?.user?.id });
-            console.log(res.data)
             setBlogData(res.data.data)
             setDrafting(false);
-            console.log("Drafted..");
         } catch (error) {
             console.log(error);
         }

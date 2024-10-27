@@ -154,7 +154,7 @@ const NewBlogStarter = () => {
                     <Input {...register("slug")} type="text" id="slug" placeholder="Slug" name="slug" value={blog.slug} disabled />
 
                     <Label htmlFor="tags">Tags</Label>
-                    <Input type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} />
+                    <Input type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={(e) => handleKeyUp(e)} />
                     {(showSearchResult && searchTag.length > 0) && <div className="rounded-md p-2 h-fit flex flex-wrap gap-2 bg-secondary mt-2">
                         {searchTag.map((tag, index) => {
                             return <button key={index} className="w-fit bg-background p-1 rounded-sm" onClick={(e) => {
