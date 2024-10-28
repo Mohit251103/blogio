@@ -102,7 +102,17 @@ const NewBlogStarter = () => {
     let isHandlingCustomTag = false;
     const handleKeyUp = async (e: any) => {
         console.log(tagInput);
+        console.log(e.keyCode);
         debounceCallback(e.target.value);
+        if (tagInput !== "" && e.keyCode === 13) {
+            setBlog({
+                ...blog, tag: [...blog.tag, {
+                    id: null,
+                    name: tagInput
+                }]
+            })
+            setTagInput("");
+        }
     }
 
 
@@ -167,7 +177,17 @@ const NewBlogStarter = () => {
     return (
         <div className={`absolute top-0 w-[100vw] h-[100vh] bg-black backdrop-blur-sm bg-opacity-80 flex justify-center items-center ${!blogStarter ? "hidden" : ""} z-50`}>
             <div className="w-fit h-fit p-3 bg-background text-foreground relative rounded-md ">
-                <div className="absolute top-1 right-1" onClick={() => setBlogStarter(false)}>
+                <div className="absolute top-1 right-1" onClick={() => {
+                    setBlogStarter(false);
+                    setSearchTag([]);
+                    setBlog({
+                        userId:"",
+                        title: "",
+                        tag: [],
+                        slug: ""
+                    });
+                    setTagInput("");
+                }}>
                     <X />
                 </div>
                 <form className="max-sm:w-[80vw] max-md:w-[55vw] max-lg:w-[55vw] xl:w-[30vw]" onSubmit={handleSubmit(createBlog)}>
@@ -181,9 +201,9 @@ const NewBlogStarter = () => {
                     <Label htmlFor="tags">Tags</Label>
                     <Input ref={inputRef} type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} />
                     <Button className="hidden" onClick={(e) => {
+                        console.log("clicked the button below input");
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log()
                         setBlog({
                             ...blog, tag: [...blog.tag, {
                                 id: null,
@@ -220,7 +240,7 @@ const NewBlogStarter = () => {
                         })}
                     </div>}
 
-                    <Button type="submit" className="my-2" disabled={loading} onClick={(e) => e.preventDefault()}>
+                    <Button type="submit" className="my-2" disabled={loading}>
                         {loading ? 'Creating...' : 'Create'}
                     </Button>
 

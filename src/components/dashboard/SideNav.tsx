@@ -1,6 +1,5 @@
 "use client";
 import SideNavButton from "../ui/ClientSideNavButton";
-import { Button } from "../ui/button"
 import {
     Select,
     SelectContent,
@@ -10,7 +9,6 @@ import {
     SelectGroup
 } from "@/components/ui/select"
 import { BookDashed, LayoutDashboard, NotebookPen, PlusCircle, X } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { PopupContext } from "@/context/popup-provider";
 
@@ -57,6 +55,7 @@ const SideNav = () => {
                         <p className="text-md"> Drafts</p>
                     </SideNavButton>
                     <SideNavButton className={`flex items-center my-2`} onClick={() => {
+                        setSideNav(false);
                         setBlogStarter(true);
                     }}>
                         <PlusCircle className="w-4 h-4 mr-2" />
