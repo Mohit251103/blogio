@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useSession } from "next-auth/react";
@@ -14,7 +14,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
-import { getTags } from "@/actions";
+import { getTags, handleDelete } from "@/actions";
 
 const formSchema = z.object({
     title: z.string().min(1, "Cannot be blank").max(50, "Cannot be more than 50 characters"),
@@ -34,6 +34,9 @@ type IBlog = {
 }
 
 const NewBlogStarter = () => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [selectedTag, setSelectedTag] = useState<{ index: number, id: string | null, name: string } | null>(null);
+    const [clickedButton, setClickedButton] = useState<string>("");
     const router = useRouter();
     const { data: session } = useSession();
     const [tagInput, setTagInput] = useState<string>("");
@@ -83,6 +86,10 @@ const NewBlogStarter = () => {
 
     const debounceCallback = useCallback(
         debouncedSearch(async (tagInput: string) => {
+            if (tagInput == "") {
+                setSearchTag([]);
+                return;
+            }
             console.log("debounced...")
             const tags = await getTags(tagInput);
             if (tags) {
@@ -92,20 +99,10 @@ const NewBlogStarter = () => {
         }, 200)
         , [debouncedSearch]) // this one is to debounce api calls
 
+    let isHandlingCustomTag = false;
     const handleKeyUp = async (e: any) => {
+        console.log(tagInput);
         debounceCallback(e.target.value);
-        console.log(e.code);
-        if (e.key === "Enter" && e.target.value) {
-            console.log("enter");
-            setBlog({
-                ...blog,
-                tag: [...blog.tag, {
-                    id: null,
-                    name: e.target.value
-                }]
-            })
-            setTagInput("");
-        }
     }
 
 
@@ -134,10 +131,38 @@ const NewBlogStarter = () => {
         }
     }
 
-    const addTag = (tag: ITag) => {
-        setBlog({ ...blog, tag: [...blog.tag, { id: tag.id, name: tag.name }] })
+    const addTag = () => {
+        console.log("addtag invoked");
+        setBlog((prevBlog) => ({ ...prevBlog, tag: [...prevBlog.tag, selectedTag as ITag] }))
         setTagInput("");
+        setSelectedTag(null);
+        setClickedButton("");
     }
+
+    const handleKeyDown = (e: any) => {
+        if (e.key == "enter") {
+            e.preventDefault();
+        }
+    }
+
+    const handleDeleteTag = () => {
+        console.log("deletetag invoked")
+        setBlog({
+            ...blog, tag: [...blog.tag.filter((tag, idx) => idx != selectedTag?.index)]
+        })
+        setSelectedTag(null);
+        setClickedButton("");
+    }
+
+    useEffect(() => {
+        if (!selectedTag) return;
+        if (clickedButton === "add" && selectedTag) {
+            addTag()
+        }
+        if (clickedButton === "delete" && selectedTag) {
+            handleDeleteTag();
+        }
+    }, [selectedTag, clickedButton])
 
     return (
         <div className={`absolute top-0 w-[100vw] h-[100vh] bg-black backdrop-blur-sm bg-opacity-80 flex justify-center items-center ${!blogStarter ? "hidden" : ""} z-50`}>
@@ -154,14 +179,30 @@ const NewBlogStarter = () => {
                     <Input {...register("slug")} type="text" id="slug" placeholder="Slug" name="slug" value={blog.slug} disabled />
 
                     <Label htmlFor="tags">Tags</Label>
-                    <Input type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={(e) => handleKeyUp(e)} />
-                    {(showSearchResult && searchTag.length > 0) && <div className="rounded-md p-2 h-fit flex flex-wrap gap-2 bg-secondary mt-2">
-                        {searchTag.map((tag, index) => {
-                            return <button key={index} className="w-fit bg-background p-1 rounded-sm" onClick={(e) => {
-                                e.preventDefault();
-                                addTag(tag)
-                            }}>{tag.name}</button>
-                        })}
+                    <Input ref={inputRef} type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} />
+                    <Button className="hidden" onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log()
+                        setBlog({
+                            ...blog, tag: [...blog.tag, {
+                                id: null,
+                                name: tagInput
+                            }]
+                        })
+                        setTagInput("");
+                    }}></Button>
+                    {(showSearchResult && searchTag.length > 0) && <div className="rounded-md p-2 h-fit flex flex-col bg-secondary mt-2 max-h-[150px] overflow-y-auto relative">
+                        <h3 className="text-sm font-extrabold mb-2 sticky top-1 ">Suggestions</h3>
+                        <div className="flex flex-wrap gap-2 overflow-y-auto">
+                            {searchTag.map((tag, index) => {
+                                return <button key={index} className="w-fit bg-background p-1 rounded-sm h-fit" onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedTag({ ...tag, index });
+                                    setClickedButton("add");
+                                }}>{tag.name}</button>
+                            })}
+                        </div>
                     </div>
                     }
                     {blog.tag && <div className="p-2 w-full flex flex-wrap">
@@ -169,21 +210,21 @@ const NewBlogStarter = () => {
                             return <p key={index} className="text-xs p-2 rounded-md bg-secondary text-secondary-foreground relative mx-1 group">
                                 <button className="absolute top-0 left-0 rounded-full opacity-0 transition-opacity duration-100 group-hover:opacity-100 bg-secondary" onClick={(e) => {
                                     e.preventDefault();
-                                    setBlog({
-                                        ...blog, tag: [...blog.tag.filter((tag, idx) => idx != index)] 
-                                    })}
+                                    setSelectedTag({ ...tag, index });
+                                    setClickedButton("delete");
+                                }
                                 }>
-                                <X className="w-2 h-2 rounded-full" /></button>
-                            { tag.name }
+                                    <X className="w-2 h-2 rounded-full" /></button>
+                                {tag.name}
                             </p>
-                    })}
-            </div>}
+                        })}
+                    </div>}
 
-            <Button type="submit" className="my-2" disabled={loading}>
-                {loading ? 'Creating...' : 'Create'}
-            </Button>
+                    <Button type="submit" className="my-2" disabled={loading} onClick={(e) => e.preventDefault()}>
+                        {loading ? 'Creating...' : 'Create'}
+                    </Button>
 
-        </form>
+                </form>
             </div >
         </div >
     )
