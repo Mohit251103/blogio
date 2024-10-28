@@ -14,8 +14,8 @@ const ProfileButton = () => {
         redirect("/profile");
     }
     return (
-        <form action={handleSubmit}>
-            <button className="bg-none" type="submit">Profile</button>
+        <form className="w-full" action={handleSubmit}>
+            <button className="bg-none flex w-full" type="submit"><User className="w-4 h-4 mr-1" />Profile</button>
         </form>
     )
 }
@@ -41,7 +41,7 @@ const Nav = async ({ origin }: { origin: string }) => {
                         <Image src={session?.user?.image as string} className="rounded-md border mx-2 max-sm:w-[25px] max-sm:h-[25px]" alt="profile" width={35} height={35} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem><User className="w-4 h-4 mr-1" /> <ProfileButton/></DropdownMenuItem>
+                        <DropdownMenuItem><ProfileButton/></DropdownMenuItem>
                         <DropdownMenuItem><Settings className="w-4 h-4 mr-1" /> Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="flex flex-col">
