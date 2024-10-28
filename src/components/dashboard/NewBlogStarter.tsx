@@ -99,7 +99,6 @@ const NewBlogStarter = () => {
         }, 200)
         , [debouncedSearch]) // this one is to debounce api calls
 
-    let isHandlingCustomTag = false;
     const handleKeyUp = async (e: any) => {
         console.log(tagInput);
         console.log(e.keyCode);
