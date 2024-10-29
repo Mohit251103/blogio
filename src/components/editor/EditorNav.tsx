@@ -35,9 +35,9 @@ const EditorNav = ({slug}:{slug:string|null}) => {
 
     return (
         <div className="w-full flex items-center justify-between mb-5 p-1 h-fit">
-            <div className="flex flex-col items-start justify-center max-sm:hidden  ">
-                <Image src={user?.image as string} alt="profile" width={40} height={40} className="rounded-full"/>
-                <p className="text-sm text-foreground">{user?.email}</p>
+            <div className="flex items-center justify-center max-sm:hidden  ">
+                <Image src={user?.image as string} alt="profile" width={30} height={30} className="rounded-full aspect-square mr-2"/>
+                <p className="text-sm font-bold text-foreground">{user?.name}</p>
             </div>
             <div className="flex items-center">
                 {drafting && <div className="text-sm text-secondary-foreground flex items-center mr-3">

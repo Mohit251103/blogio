@@ -18,6 +18,7 @@ model User {
   id            String       @id @default(cuid())
   name          String?
   email         String       @unique
+  description   String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -79,15 +80,15 @@ model VerificationToken {
 }
 
 model Blog {
-  id          String       @id @default(cuid())
+  id          String  @id @default(cuid())
   userId      String
   title       String
-  slug        String       @unique
+  slug        String  @unique
   description String
   tags        Tag[]
-  author      User         @relation(fields: [userId], references: [id])
+  author      User    @relation(fields: [userId], references: [id])
   Like        Like[]
-  isPublished Boolean      @default(false)
+  isPublished Boolean @default(false)
 }
 
 model Like {
@@ -103,7 +104,7 @@ model Like {
 }
 
 model Tag {
-  id     String       @id @default(cuid())
-  name   String
-  blogs  Blog[]
+  id    String @id @default(cuid())
+  name  String
+  blogs Blog[]
 }

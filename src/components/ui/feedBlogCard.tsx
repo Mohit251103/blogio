@@ -33,7 +33,7 @@ const FeedBlogCard = ({ title, slug, author }: {
                     <CardTitle className="text-xl font-semibold">{title}</CardTitle>
                     <CardDescription className="flex items-center">
                         <p className="lg:text-sm text-xs text-secondary-foreground italic">by</p>
-                        <Image src={author.profile} alt="Author Profile" width={25} height={25} className="rounded-full mx-1"/>
+                        <Image src={author.profile} alt="Author Profile" width={25} height={25} className="rounded-full mx-1 aspect-square"/>
                         <p className="lg:text-sm text-xs text-secondary-foreground">{author.name}</p>
                     </CardDescription>
                 </CardHeader>

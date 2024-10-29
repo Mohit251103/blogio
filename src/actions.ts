@@ -89,3 +89,51 @@ export const getTags = async (name: string) => {
         console.log(error);
     }
 }
+
+export const getDesc = async (userId:string) => {
+    "use server";
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+        return user?.description;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getAllTags = async () => {
+    "use server";
+    try {
+        const tags = await prisma.tag.groupBy({
+            by: 'name',
+            orderBy: {
+                _count: {
+                    name: 'desc'
+                }
+            }
+        });
+        return tags;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getTopUsers = async () => {
+    "use server";
+    try {
+        const users = await prisma.user.findMany({
+            orderBy: {
+                subscribers: {
+                    _count: 'desc'
+                }
+            }
+        })
+        console.log(users);
+        return users;
+    } catch (error) {
+        console.log(error);
+    }
+}

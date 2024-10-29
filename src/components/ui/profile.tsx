@@ -17,17 +17,20 @@ import { z } from "zod";
 import { register } from "module";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "@/hooks/use-toast";
+import { Textarea } from "./textarea";
+import { getDesc } from "@/actions";
 
 const IProfileForm = z.object({
     image: z.string().optional(),
     name: z.string().min(1, "Cannot be empty").max(20, "Cannot exceed more than 20 characters"),
-    desc: z.string().optional()
+    desc: z.string().max(150, "Cannot exceed more than 150 characters").optional()
 })
 
 const Profile = () => {
     const { data: session } = useSession();
     const { imageUrl } = useContext(ProfileContext);
     const [update, setUpdate] = useState<boolean>(false);
+    const [updating, setUpdating] = useState<boolean>(false);
     const [editImage, setEditImage] = useState<boolean>(false);
     const [profile, setProfile] = useState({
         userId: "",
@@ -54,9 +57,9 @@ const Profile = () => {
     })
 
     const handleFormSubmit = async () => {
+        setUpdating(true);
         try {
             const res = await axiosInstance.post("/api/profile/update", profile);
-            console.log(res);
             toast({
                 title: res.data.message
             })
@@ -66,16 +69,24 @@ const Profile = () => {
             //     title: res.data.message
             // })
         }
+        finally {
+            setUpdating(false);
+        }
+    }
+
+    const getProfile = async () => {
+        const description = await getDesc(session?.user?.id as string);
+        setProfile({
+            userId: session?.user?.id as string,
+            name: session?.user?.name as string,
+            image: session?.user?.image as string,
+            desc: description as string
+        })
     }
 
     useEffect(() => {
         if (session) {
-            setProfile({
-                userId: session.user?.id as string,
-                name: session.user?.name as string,
-                image: session.user?.image as string,
-                desc: ""
-            })
+            getProfile();
         }
     }, [session])
     
@@ -108,28 +119,28 @@ const Profile = () => {
                 <p className="bg-secondary text-secondary-foreground text-xs p-1 rounded-md absolute top-0 right-0 translate-x-16 opacity-0 peer-hover:opacity-100 transition-opacity duration-200">Edit Profile</p>
                 <div className="relative rounded-full w-fit h-fit group aspect-square">
                     <Image src={profile.image} width={100} height={100} alt="user profile pic" className="rounded-full aspect-square" />
-                    <div className="bg-black bg-opacity-60 flex justify-center items-center opacity-0 absolute top-0 w-full h-full group-hover:opacity-100 rounded-full">
+                    {update && <div className="bg-black bg-opacity-60 flex justify-center items-center opacity-0 absolute top-0 w-full h-full group-hover:opacity-100 rounded-full">
                         <button onClick={handleEditImage}>
                             <EditIcon />
                         </button>
-                    </div>
+                    </div>}
                 </div>
                 <div className="grow">
                     <form onSubmit={handleSubmit(handleFormSubmit)}>
                         <Label htmlFor="username">Username</Label>
-                        <Input {...register('name')} type="text" id="username" value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} disabled={!update}></Input>
-                        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+                        <Input {...register('name')} type="text" id="username" value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} autoFocus={true} disabled={!update}></Input>
+                        {(update && errors.name) && <p className="text-sm text-red-500">{errors.name.message}</p>}
 
                         <Label htmlFor="email">Email</Label>
                         <Input type="email" id="email" value={session.user?.email as string} disabled={true}></Input>
 
                         <Label htmlFor="desc">Description</Label>
-                        <Input {...register('desc')} type="text" id="desc" value={profile.desc} placeholder="Description" onChange={(e)=> setProfile({...profile, desc: e.target.value})} disabled={!update}></Input>
-                        {errors.desc && <p className="text-sm text-red-500">{errors.desc.message}</p>}
+                        <Textarea {...register('desc')} id="desc" value={profile.desc} placeholder="Description" onChange={(e)=> setProfile({...profile, desc: e.target.value})} disabled={!update}></Textarea>
+                        {(update && errors.desc) && <p className="text-sm text-red-500">{errors.desc.message}</p>}
 
                         {update &&
                             <div className="flex">
-                                <Button type="submit" className="my-2">Edit Profile</Button>
+                                <Button type="submit" className="my-2">{!updating ? "Edit Profile" : "Editing..."}</Button>
                                 <Button variant="outline" onClick={handleCancelUpdate} className="my-2">Cancel</Button>
                             </div>
                         }

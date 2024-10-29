@@ -14,13 +14,18 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ message: "User Does Not Exist", status: 404 });
         }
 
+        if (!body.desc) {
+            body.desc = user.description;
+        }
+
         await prisma.user.update({
             where: {
               id: body.userId  
             },
             data: {
                 name: body.name,
-                image: body.image
+                image: body.image,
+                description: body.desc
             }
         })
         return NextResponse.json({ message: "Updated Successfully", status: 200 });
