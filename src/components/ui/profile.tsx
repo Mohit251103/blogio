@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
+import Loader from "./loader";
 
-const Profile = async () => {
+const Profile = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState<boolean>(false);
     const [update, setUpdate] = useState<boolean>(false);
@@ -26,20 +27,9 @@ const Profile = async () => {
         setUpdate(false);
     }
 
-    useEffect(() => {
-        if (!session) {
-            setLoading(true);
-        }
-        else {
-            setLoading(false);
-        }
-    }, [session]);
-
-    if (loading) {
+    if (!session) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <LoaderCircle className="animate-spin"></LoaderCircle>
-            </div>
+            <Loader />
         )
     }
     return (
