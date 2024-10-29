@@ -38,7 +38,7 @@ const Nav = async ({ origin }: { origin: string }) => {
                 <ModeToggle />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Image src={session?.user?.image as string} className="rounded-md border mx-2 max-sm:w-[25px] max-sm:h-[25px]" alt="profile" width={35} height={35} />
+                        <Image src={session?.user?.image as string} className="rounded-md border mx-2 max-sm:w-[25px] max-sm:h-[25px] aspect-square" alt="profile" width={35} height={35} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuItem><ProfileButton/></DropdownMenuItem>

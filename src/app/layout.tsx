@@ -10,6 +10,7 @@ import { EditorProvider } from "@/context/editor-context";
 import { BlogProvider } from "@/context/blog-context";
 import { Suspense } from "react";
 import NewBlogStarter from "@/components/dashboard/NewBlogStarter";
+import { ProfileProvider } from "@/context/profile-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,18 +45,20 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Suspense>
-            <SessionProvider>
-              <PopupProvider>
-                <EdgeStoreProvider>
-                  <EditorProvider>
-                    <BlogProvider>
-                      <NewBlogStarter />
-                      {children}
-                    </BlogProvider>
-                  </EditorProvider>
-                </EdgeStoreProvider>
-              </PopupProvider>
-            </SessionProvider>
+            <ProfileProvider>
+              <SessionProvider>
+                <PopupProvider>
+                  <EdgeStoreProvider>
+                    <EditorProvider>
+                      <BlogProvider>
+                        <NewBlogStarter />
+                        {children}
+                      </BlogProvider>
+                    </EditorProvider>
+                  </EdgeStoreProvider>
+                </PopupProvider>
+              </SessionProvider>
+            </ProfileProvider>
           </Suspense>
           <Toaster />
         </ThemeProvider>
