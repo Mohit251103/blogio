@@ -57,9 +57,6 @@ const BlogCard = ({ key, slug, title, origin }: { key:number ,slug: string, titl
                     <DeleteButton key={key} slug={slug} origin={origin} state={{deleting, setDeleting}}><Trash2 className="mr-1 w-4 h-4" />{deleting? "Deleting..." : "Delete"}</DeleteButton>
                 </CardFooter>
             </div>
-            {/* <CardContent className="my-auto mx-auto min-w-[100px]">
-                <Image src="/profile.png" alt="Card Image" width={100} height={100} />
-            </CardContent> */}
         </Card>
     )
 }

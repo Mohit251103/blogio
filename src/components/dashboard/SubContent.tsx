@@ -3,16 +3,15 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import Loader from "../ui/loader";
 import { getAllTags, getTopUsers } from "@/actions";
 import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const SubContent: React.FC = () => {
-    const { data: session } = useSession();
     const [tags, setTags] = useState<string[] | undefined>();
     const [users, setUsers] = useState<{ id: string | null, name: string | null, image: string | null, desc: string }[] | undefined>([])
     const [showContent, setShowContent] = useState<boolean>(false);
+    const router = useRouter();
 
     const getData = async () => {
         const res = await getAllTags();
@@ -48,7 +47,9 @@ const SubContent: React.FC = () => {
                     <p className="font-extrabold text-lg my-3">Topics for you</p>
                     <div className="flex flex-wrap w-4/5 gap-2">
                         {tags?.map((tag, index) => {
-                            return <button className="rounded-md p-1 text-sm text-secondary-foreground bg-secondary" key={index}>
+                            return <button className="rounded-md p-1 text-sm text-secondary-foreground bg-secondary" key={index} onClick={() => {
+                                router.push(`/tag/${tag}`);
+                            }}>
                                 {tag}
                             </button>
                         })}
@@ -73,7 +74,7 @@ const SubContent: React.FC = () => {
                     <button className="text-blue-500 text-sm ms-3 mt-3">See more to follow</button>
                 </div>
             </div>
-            <div className="w-[95%] bg-secondary h-[0.5px]"></div>
+            <div className="w-[100%] bg-secondary h-[0.5px]"></div>
             {/* footer */}
             <div className="flex flex-col items-center justify-center grow">
                 <p className="text-sm text-bold">Build with &#9829; by <Link href={"https://github.com/mohit251103"} className="italic" target="_blank">Mohit Negi</Link></p>

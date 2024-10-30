@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 export const POST = async (req:Request) => {
     try {
         const body = await req.json();
-        console.log(body);
-
-        const tags = body.tag.length ? body.tag.map((tag: any) => { return { name: tag.name } }) : null;
-        console.log(tags);
+        let tags;
+        if (body.tag !== undefined) {
+            tags = body.tag.length ? body.tag.map((tag: any) => { return { name: tag.name } }) : null;
+        }
 
         const blog = await prisma.blog.findUnique({
             where: {

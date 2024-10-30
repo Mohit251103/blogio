@@ -7,14 +7,21 @@ import { auth } from "./auth";
 
 export const handleDelete = async (formData:FormData, origin: string) => {
     "use server";
-    console.log(formData.get('slug'));
     try {
         await prisma.blog.delete({
             where: {
                 slug: formData.get('slug') as string,
                 isPublished: origin==="publish"
-             }
+            },
+            include: {
+                tags: true
+            }
         });
+        await prisma.tag.deleteMany({
+            where: {
+                blogs: {none: {}}
+            }
+        })
     } catch (error) {
         console.log(error);
     }
@@ -131,8 +138,32 @@ export const getTopUsers = async () => {
                 }
             }
         })
-        console.log(users);
         return users;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getBlogWithTag = async (tag: string) => {
+    "use server";
+    try {
+        const blogs = await prisma.tag.findMany({
+            select: {
+                blogs: {
+                    where: {
+                      isPublished: true  
+                    },
+                    include: {
+                        author: true
+                    }
+                }  
+            },
+            where: {
+                name: tag
+            }
+        })
+        const res = blogs[0].blogs;
+        return res;
     } catch (error) {
         console.log(error);
     }
