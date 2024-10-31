@@ -1,26 +1,26 @@
 "use client";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { BookCheck, BookOpen } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useContext, useEffect } from "react";
+// import {
+//     Card,
+//     CardContent,
+//     CardDescription,
+//     CardFooter,
+//     CardHeader,
+//     CardTitle,
+// } from "@/components/ui/card"
+// import Image from "next/image";
+// import { Button } from "../ui/button";
+// import { BookCheck, BookOpen } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { BlogContext } from "@/context/blog-context";
 import FeedBlogCard from "../ui/feedBlogCard";
 import axiosInstance from "@/lib/axiosInstance";
+import Loader from "../ui/loader";
+import { LoaderCircle } from "lucide-react";
 
 
 const ContentArea = () => {
-    const { data: session } = useSession();
-    console.log(session?.user);
     const { blogs, setBlogs } = useContext(BlogContext);
+    const [loading, setLoading] = useState<boolean>(true);
     
     const getBlogs = async () => {
         try {
@@ -29,15 +29,25 @@ const ContentArea = () => {
         } catch (error) {
             console.log(error);
         }
+        finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
         getBlogs(); 
-    },[])
+    }, [])
+    
+    if (loading) {
+        return <div className="w-[100vw] lg:w-[45vw] flex justify-center items-center h-[80vh]">
+            <LoaderCircle className="animate-spin"></LoaderCircle>
+        </div>
+    }
+
     return (
         <>
             <div className="w-full lg:w-[45vw] flex flex-wrap gap-4 overflow-y-auto grow lg:mx-2 max-lg:px-2">
-                <Card className="w-full flex">
+                {/* <Card className="w-full flex">
                     <div>
                         <CardHeader>
                             <CardTitle>Welcome, {session?.user?.name}</CardTitle>
@@ -51,7 +61,7 @@ const ContentArea = () => {
                     <CardContent className="my-auto mx-auto">
                         <Image src="/profile.png" alt="Card Image" width={100} height={100} />
                     </CardContent>
-                </Card>
+                </Card> */}
                 {blogs.length !== 0 && blogs.map((blog, index) => {
                     return (
                         <FeedBlogCard key={index} title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name, profile: blog.author.image }} />
@@ -59,7 +69,7 @@ const ContentArea = () => {
                 })
                 }
             </div>
-            {!blogs.length && <div className=""><p className="text-sm text-bold text-secondary-foreground text-center my-3">No Blogs Found</p></div>}
+            {(!blogs.length && !loading) && <div className=""><p className="text-sm text-bold text-secondary-foreground text-center my-3">No Blogs Found</p></div>}
         </>
     )
 }

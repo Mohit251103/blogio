@@ -3,37 +3,71 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAllTags, getTopUsers } from "@/actions";
+import { checkSubscription, getAllTags, getTopUsers, subscribeUsers } from "@/actions";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 const SubContent: React.FC = () => {
     const [tags, setTags] = useState<string[] | undefined>();
-    const [users, setUsers] = useState<{ id: string | null, name: string | null, image: string | null, desc: string }[] | undefined>([])
+    const [users, setUsers] = useState<{ id: string, name: string | null, image: string | null, desc: string }[] | undefined>([])
     const [showContent, setShowContent] = useState<boolean>(false);
+    const [subscribing, setSubscribing] = useState<boolean>(false);
     const router = useRouter();
+    const {data:session} = useSession();
+
+    
+    const handleSubscribe = async (userId : string) => {
+        await subscribeUsers(session?.user?.id as string, userId);
+        toast({
+            title: "Subscribed"
+        });
+        setSubscribing(false);
+    }
+    
+    const isSubscribed = async (author: string) => {
+        console.log(session?.user?.id);
+        const res = await checkSubscription(session?.user?.id as string, author);
+        if (res) {
+            return true;
+        }
+        return false;
+    }
 
     const getData = async () => {
         const res = await getAllTags();
         const res_2 = await getTopUsers();
         const users = res_2?.map((user) => {
             return { ...user, desc: user.description as string };
-        }) 
+        });
+        
+        let filtered_users = [];
+        for (const user of users!) {
+            const subscribed = await isSubscribed(user.id);
+            if (!subscribed && user.id != session?.user?.id) {
+                console.log(user.email);
+                filtered_users.push(user);
+            }
+        }
         const tags = res?.map((tag) => {
             return tag.name;
         })
+
         setTags(tags?.slice(0,10));
-        setUsers(users?.slice(0, 4));
+        setUsers(filtered_users?.slice(0, 5));
         setShowContent(true);
     }
-
+    
     useEffect(() => {
-        getData();
-    }, [])
+        if (session) {
+            getData();
+        }
+    }, [session])
     
     if (!showContent) {
         return (
-            <div className="grow flex justify-center items-center ">
+            <div className="grow flex justify-center items-center max-md:hidden">
                 <LoaderCircle className="animate-spin"></LoaderCircle>
             </div>
         )
@@ -59,19 +93,23 @@ const SubContent: React.FC = () => {
                 {/* trending accounts */}
                 <div className="flex flex-col p-2 items-start w-full ms-3">
                     <p className="font-extrabold text-lg my-3">People to follow</p>
-                    <div className="flex flex-wrap gap-2">
-                        {users?.filter((user, index) => index < 5).map((user, index) => {
-                            return <div key={index} className="h-fit p-2 rounded-md bg-secondary text-secondary-foreground">
+                    <div className="flex flex-wrap gap-2 w-full">
+                        {users?.map((user, index) => {
+                            return <div key={index} className="min-h-[45%] p-2 rounded-md bg-secondary text-secondary-foreground w-[45%]">
                                 <button className="flex">
                                     <Image src={user.image as string} width={25} height={25} alt="profile" className="mr-2 rounded-full aspect-square" />
                                     <p className="text-sm font-bold">{user.name}</p>
                                 </button>
-                                <p className="text-muted-foreground text-sm my-1">{user?.desc?.substring(0, 30) + (user.desc.length > 30 ? "..." : "")}</p>
-                                <Button className="text-xs p-2 h-fit">Subscribe</Button>
+                                {user.desc?<p className="text-muted-foreground text-sm my-1 ms-2">{user?.desc?.substring(0, 30) + (user.desc.length > 30 ? "..." : "")}</p> : <p className="text-muted-foreground text-sm my-1 ms-2">...</p>}
+                                <Button className="text-xs p-2 h-fit" onClick={() => {
+                                    setSubscribing(true);
+                                    handleSubscribe(user.id);
+                                }} disabled={subscribing}>{subscribing?"Subscribing...":"Subscribe"}</Button>
                             </div>
                         })}
+                        {users?.filter((_, index) => index < 5 && _.id != session?.user?.id).length===0 && <p className="text-sm font-bold text-center text-muted-foreground">No one to follow yet</p>}
                     </div>
-                    <button className="text-blue-500 text-sm ms-3 mt-3">See more to follow</button>
+                    {!(users?.filter((_, index) => index < 5 && _.id != session?.user?.id).length===0) && <button className="text-blue-500 text-sm ms-3 mt-3">See more to follow</button>}
                 </div>
             </div>
             <div className="w-[100%] bg-secondary h-[0.5px]"></div>

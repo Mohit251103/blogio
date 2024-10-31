@@ -93,17 +93,44 @@ body {
     @apply border-border;
   }
 
+  .mod-scroll::-webkit-scrollbar {
+    @apply appearance-none bg-background w-2
+  }
+
+  .mod-scroll::-webkit-scrollbar-thumb {
+    @apply rounded-lg bg-secondary
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .h-grad-transparent {
+    -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    mask: linear-gradient(90deg,
+        transparent,
+        white 20%
+        white 80%,
+        transparent);
+  }
+
+  .h-grad-transparent-left {
+    -webkit-mask: linear-gradient(90deg, transparent, white 20%);
+    mask: linear-gradient(90deg,
+        transparent,
+        white 20%);
+  }
+
+  .h-grad-transparent-right {
+    -webkit-mask: linear-gradient(90deg, white 80%, transparent);
+    mask: linear-gradient(90deg,
+        white 80%,
+        transparent);
+  }
+
   body {
     @apply bg-background text-foreground;
   }
-
-    ::-webkit-scrollbar {
-      @apply appearance-none bg-background w-2
-    }
-
-    ::-webkit-scrollbar-thumb{
-      @apply rounded-lg bg-secondary
-    }
 
   .ProseMirror {
     @apply bg-background text-foreground p-12 px-8 sm:px-12
@@ -300,12 +327,14 @@ blockquote {
   font-style: italic;
 }
 
-table{
+table {
   border: 1px solid;
 }
-table>tbody>tr>th{
+
+table>tbody>tr>th {
   border: 1px solid;
 }
-table>tbody>tr>td{
+
+table>tbody>tr>td {
   border: 1px solid;
 }

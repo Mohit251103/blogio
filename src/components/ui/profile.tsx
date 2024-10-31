@@ -32,6 +32,7 @@ const Profile = () => {
     const [update, setUpdate] = useState<boolean>(false);
     const [updating, setUpdating] = useState<boolean>(false);
     const [editImage, setEditImage] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [profile, setProfile] = useState({
         userId: "",
         image: "",
@@ -81,10 +82,12 @@ const Profile = () => {
             name: session?.user?.name as string,
             image: session?.user?.image as string,
             desc: description as string
-        })
+        });
+        setLoading(false);
     }
 
     useEffect(() => {
+        setLoading(true);
         if (session) {
             getProfile();
         }
@@ -98,7 +101,7 @@ const Profile = () => {
         }
     },[imageUrl])
 
-    if (!session) {
+    if (loading) {
         return (
             <Loader />
         )
@@ -132,7 +135,7 @@ const Profile = () => {
                         {(update && errors.name) && <p className="text-sm text-red-500">{errors.name.message}</p>}
 
                         <Label htmlFor="email">Email</Label>
-                        <Input type="email" id="email" value={session.user?.email as string} disabled={true}></Input>
+                        <Input type="email" id="email" value={session?.user?.email as string} disabled={true}></Input>
 
                         <Label htmlFor="desc">Description</Label>
                         <Textarea {...register('desc')} id="desc" value={profile.desc} placeholder="Description" onChange={(e)=> setProfile({...profile, desc: e.target.value})} disabled={!update}></Textarea>

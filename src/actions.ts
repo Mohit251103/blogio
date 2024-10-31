@@ -168,3 +168,30 @@ export const getBlogWithTag = async (tag: string) => {
         console.log(error);
     }
 }
+
+export const subscribeUsers = async (subscriber: string, author: string) => {
+    try {
+        await prisma.subscriber.create({
+            data: {
+                userId: author,
+                subscriberId: subscriber
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const checkSubscription = async (subscriber: string, author: string) => {
+    try {
+        const subscription = await prisma.subscriber.findUnique({
+            where: {
+                userId_subscriberId: { userId:author, subscriberId:subscriber }
+            }
+        })
+        if (subscription) return true;
+        return false;
+    } catch (error) {
+        console.log(error);
+    }
+}

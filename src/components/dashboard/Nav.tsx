@@ -42,7 +42,7 @@ const Nav = async ({ origin }: { origin: string }) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuItem><ProfileButton/></DropdownMenuItem>
-                        <DropdownMenuItem><Settings className="w-4 h-4 mr-1" /> Settings</DropdownMenuItem>
+                        {/* <DropdownMenuItem><Settings className="w-4 h-4 mr-1" /> Settings</DropdownMenuItem> */}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="flex flex-col">
                             <form action={handleLogOut}>

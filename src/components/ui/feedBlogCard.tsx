@@ -41,9 +41,6 @@ const FeedBlogCard = ({ title, slug, author }: {
                     <NormalRouteButton slug={slug}><BookOpen className="mr-1 w-4 h-4" />Open</NormalRouteButton>
                 </CardFooter>
             </div>
-            {/* <CardContent className="my-auto mx-auto min-w-[100px]">
-                <Image src="/profile.png" alt="Card Image" width={100} height={100} />
-            </CardContent> */}
         </Card>
     )
 }
