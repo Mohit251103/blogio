@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 
 const SubContent: React.FC = () => {
-    const [tags, setTags] = useState<string[] | undefined>();
+    const [tags, setTags] = useState<string[]>([]);
     const [users, setUsers] = useState<{ id: string, name: string | null, image: string | null, desc: string }[] | undefined>([])
     const [showContent, setShowContent] = useState<boolean>(false);
     const [subscribing, setSubscribing] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const SubContent: React.FC = () => {
             return tag.name;
         })
 
-        setTags(tags?.slice(0,10));
+        setTags(tags?.slice(0,10) ?? []);
         setUsers(filtered_users?.slice(0, 5));
         setShowContent(true);
     }
@@ -79,6 +79,7 @@ const SubContent: React.FC = () => {
                 {/* tag area */}
                 <div className="flex flex-col p-2 items-start w-full">
                     <p className="font-extrabold text-lg my-3">Topics for you</p>
+                    {!tags.length && <p className="text-sm font-bold text-center text-muted-foreground">No topics yet</p>}
                     <div className="flex flex-wrap w-4/5 gap-2">
                         {tags?.map((tag, index) => {
                             return <button className="rounded-md p-1 text-sm text-secondary-foreground bg-secondary" key={index} onClick={() => {
@@ -87,7 +88,7 @@ const SubContent: React.FC = () => {
                                 {tag}
                             </button>
                         })}
-                        <button className="text-blue-500 text-sm ms-3 mt-3">See more topics</button>
+                        {!!tags.length && <button className="text-blue-500 text-sm ms-3 mt-3">See more topics</button>}
                     </div>
                 </div>
                 {/* trending accounts */}

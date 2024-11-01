@@ -1,6 +1,6 @@
 "use client";
 import BlogArea from "@/components/tag/Blogs";
-import Nav from "@/components/tag/Nav";
+import TagNav from "@/components/tag/Nav";
 import { useParams } from "next/navigation";
 
 const TagExplorePage = () => {
@@ -9,7 +9,7 @@ const TagExplorePage = () => {
     return (
         <div className="flex flex-col justify-center items-center">
             {/* explore tag nav */}
-            <Nav />
+            <TagNav />
 
             <p className="text-5xl font-bold mt-3 mb-12">
                 {tag}

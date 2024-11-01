@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { ChevronLeft } from "lucide-react";
 
-const Nav = () => {
+const TagNav = () => {
     const [tags, setTags] = useState<string[] | undefined>([]);
     const router = useRouter()
     const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -57,4 +57,4 @@ const Nav = () => {
     )
 }
 
-export default Nav;
+export default TagNav;

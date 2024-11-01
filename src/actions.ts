@@ -5,13 +5,13 @@ import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
 
-export const handleDelete = async (formData:FormData, origin: string) => {
+export const handleDelete = async (formData: FormData, origin: string) => {
     "use server";
     try {
         await prisma.blog.delete({
             where: {
                 slug: formData.get('slug') as string,
-                isPublished: origin==="publish"
+                isPublished: origin === "publish"
             },
             include: {
                 tags: true
@@ -19,7 +19,7 @@ export const handleDelete = async (formData:FormData, origin: string) => {
         });
         await prisma.tag.deleteMany({
             where: {
-                blogs: {none: {}}
+                blogs: { none: {} }
             }
         })
     } catch (error) {
@@ -32,7 +32,7 @@ export const handleServerRedirect = async (route: string) => {
     redirect(route);
 }
 
-export const publishBlog = async (slug:string) => {
+export const publishBlog = async (slug: string) => {
     try {
         if (slug === "") {
             console.log("slug:", slug);
@@ -87,7 +87,8 @@ export const getTags = async (name: string) => {
         const tags = await prisma.tag.findMany({
             where: {
                 name: {
-                    contains: name
+                    contains: name,
+                    mode: 'insensitive'
                 }
             }
         })
@@ -97,7 +98,76 @@ export const getTags = async (name: string) => {
     }
 }
 
-export const getDesc = async (userId:string) => {
+export const getSearchedResults = async (query: string, type: string) => {
+    "use server";
+    try {
+        if (type === "tags") {
+            return await getTags(query);
+        }
+        if (type === "blogs") {
+            const blogs = await prisma.blog.findMany({
+                where: {
+                    OR: [
+                        {
+                            isPublished: true
+                        },
+                        {
+                            title: {
+                                contains: query,
+                                mode: "insensitive"
+                            },
+                        },
+                        {
+                            description: {
+                                contains: query,
+                                mode: "insensitive"
+                            }
+                        },
+                        {
+                            slug: {
+                                contains: query,
+                                mode:"insensitive"
+                            }
+                        }
+                    ]
+                },
+                include: {
+                    author: true
+                }
+            })
+            return blogs;
+        }
+        if (type === "author") {
+            const author = await prisma.user.findMany({
+                where: {
+                    OR: [
+                        {
+                            name: {
+                                contains: query,
+                                mode: "insensitive"
+                            }
+                        },
+                        {
+                            description: {
+                                contains: query,
+                                mode: "insensitive"
+                            }
+                        }
+                    ]
+                },
+                include: {
+                    subscribers: true
+                }
+            })
+            return author;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+export const getDesc = async (userId: string) => {
     "use server";
     try {
         const user = await prisma.user.findUnique({
@@ -151,12 +221,12 @@ export const getBlogWithTag = async (tag: string) => {
             select: {
                 blogs: {
                     where: {
-                      isPublished: true  
+                        isPublished: true
                     },
                     include: {
                         author: true
                     }
-                }  
+                }
             },
             where: {
                 name: tag
@@ -186,7 +256,7 @@ export const checkSubscription = async (subscriber: string, author: string) => {
     try {
         const subscription = await prisma.subscriber.findUnique({
             where: {
-                userId_subscriberId: { userId:author, subscriberId:subscriber }
+                userId_subscriberId: { userId: author, subscriberId: subscriber }
             }
         })
         if (subscription) return true;

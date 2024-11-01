@@ -90,7 +90,6 @@ const NewBlogStarter = () => {
                 setSearchTag([]);
                 return;
             }
-            console.log("debounced...")
             const tags = await getTags(tagInput);
             if (tags) {
                 setSearchTag([...tags]);
@@ -100,8 +99,6 @@ const NewBlogStarter = () => {
         , [debouncedSearch]) // this one is to debounce api calls
 
     const handleKeyUp = async (e: any) => {
-        console.log(tagInput);
-        console.log(e.keyCode);
         debounceCallback(e.target.value);
         if (tagInput !== "" && e.keyCode === 13) {
             setBlog({
@@ -141,7 +138,6 @@ const NewBlogStarter = () => {
     }
 
     const addTag = () => {
-        console.log("addtag invoked");
         setBlog((prevBlog) => ({ ...prevBlog, tag: [...prevBlog.tag, selectedTag as ITag] }))
         setTagInput("");
         setSelectedTag(null);
@@ -155,7 +151,6 @@ const NewBlogStarter = () => {
     }
 
     const handleDeleteTag = () => {
-        console.log("deletetag invoked")
         setBlog({
             ...blog, tag: [...blog.tag.filter((tag, idx) => idx != selectedTag?.index)]
         })
@@ -198,7 +193,7 @@ const NewBlogStarter = () => {
                     <Input {...register("slug")} type="text" id="slug" placeholder="Slug" name="slug" value={blog.slug} disabled />
 
                     <Label htmlFor="tags">Tags</Label>
-                    <Input ref={inputRef} type="text" placeholder="Write/Search a tag and press CTRL+Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} />
+                    <Input ref={inputRef} type="text" placeholder="Write/Search a tag and press Enter" value={tagInput} id="tags" name="tags" onChange={handleTagChange} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} />
                     <Button className="hidden" onClick={(e) => {
                         console.log("clicked the button below input");
                         e.preventDefault();

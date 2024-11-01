@@ -20,7 +20,7 @@ const ProfileButton = () => {
     )
 }
 
-const Nav = async ({ origin }: { origin: string }) => {
+const Nav = async ({ origin }: { origin?: string }) => {
     const session = await auth();
     const handleLogOut = async () => {
         "use server";
@@ -34,7 +34,7 @@ const Nav = async ({ origin }: { origin: string }) => {
                 <p className="lg:hidden text-md font-extrabold">B.io</p>
             </div>
             <div className="flex justify-center items-center">
-                <SearchComponent origin={origin} />
+                {/* <SearchComponent origin={origin} /> */}
                 <ModeToggle />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
