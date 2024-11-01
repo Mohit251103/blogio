@@ -150,7 +150,6 @@ const Profile = () => {
                     </form>
                 </div>
             </div>
-            <div className=""></div>
         </div>
     )
 }

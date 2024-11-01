@@ -7,7 +7,7 @@ import { ModeToggle } from "@/components/ui/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Search } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -44,6 +44,7 @@ const SearchPage = () => {
     const [blogs, setBlogs] = useState<IBlog>([]);
     const [authors, setAuthors] = useState<IAuthor>([]);
     const { type }: { type: string } = useParams();
+    const router = useRouter();
 
     const { handleSubmit, register } = useForm<z.infer<typeof IForm>>({
         resolver: zodResolver(IForm)
@@ -68,11 +69,12 @@ const SearchPage = () => {
         }
     }
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center">
-            <div className="absolute top-5 right-5">
+        <div className="min-h-screen flex flex-col justify-center items-center w-full">
+            {/* nav */}
+            <div className="flex justify-between items-center my-3 w-full px-3">
+                <Button variant="outline" onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
                 <ModeToggle />
             </div>
-            {/* nav */}
             <h1 className="text-3xl font-extrabold mt-12">Search <span>{type.toUpperCase()}</span></h1>
             {/* search bar */}
             <form onSubmit={handleSubmit(handleSearch)} className="my-12">
@@ -94,8 +96,8 @@ const SearchPage = () => {
                     })}
                 </div>}
                 {authors && <div className="grow flex flex-wrap gap-2 px-2">
-                    {authors.map((a, index)=>{
-                        return <Card key={index} className="hover:cursor-pointer" onClick={()=>{}}>
+                    {authors.map((a, index) => {
+                        return <Card key={index} className="hover:cursor-pointer" onClick={() => { }}>
                             <CardHeader>
                                 <CardTitle className="text-xl font-semibold flex justify-start items-center">
                                     <Image src={a.image} alt="Author Profile" width={50} height={50} className="rounded-full mx-1 aspect-square mr-2" />

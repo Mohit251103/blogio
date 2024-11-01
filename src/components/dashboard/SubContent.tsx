@@ -110,7 +110,7 @@ const SubContent: React.FC = () => {
                         })}
                         {users?.filter((_, index) => index < 5 && _.id != session?.user?.id).length===0 && <p className="text-sm font-bold text-center text-muted-foreground">No one to follow yet</p>}
                     </div>
-                    {!(users?.filter((_, index) => index < 5 && _.id != session?.user?.id).length===0) && <button className="text-blue-500 text-sm ms-3 mt-3">See more to follow</button>}
+                    {!(users?.filter((_, index) => index < 5 && _.id != session?.user?.id).length===0) && <button className="text-blue-500 text-sm ms-3 mt-3" onClick={()=>{router.push("/search/author")}}>See more to follow</button>}
                 </div>
             </div>
             <div className="w-[100%] bg-secondary h-[0.5px]"></div>
