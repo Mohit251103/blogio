@@ -89,8 +89,8 @@ const SearchPage = () => {
             <div className="grow max-sm:max-w-[95vw] max-w-[70vw]">
                 {tags && <div className=""></div>}
                 {blogs && <div className="grow flex flex-wrap gap-2 px-2">
-                    {blogs.map((blog) => {
-                        return <div className="">
+                    {blogs.map((blog, index) => {
+                        return <div key={index} className="">
                             <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} />
                         </div>
                     })}

@@ -34,7 +34,7 @@ const BlogArea = ({ tag }: { tag: string }) => {
         <div className="grow flex flex-wrap gap-4 lg:w-[95%] w-full px-2"> 
             {blogs?.map((blog, index) => {
                 return (
-                    <div className="max-lg:w-full lg:w-[25%]">
+                    <div key={index} className="max-lg:w-full lg:w-[25%]">
                         <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} />
                     </div>
                 )
