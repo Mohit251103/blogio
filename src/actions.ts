@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
+import { pusher } from "./lib/pusher";
 
 export const handleDelete = async (formData: FormData, origin: string) => {
     "use server";
@@ -261,6 +262,172 @@ export const checkSubscription = async (subscriber: string, author: string) => {
         })
         if (subscription) return true;
         return false;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getLikes = async (slug: string) => {
+    try {
+        const likes = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            },
+            include: {
+                Like: true
+            }
+        })
+        return likes?.Like.length;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const likeBlog = async (slug:string, user: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        });
+        await prisma.like.create({
+            data: {
+                blogId: blog!.id,
+                userId: user
+            }
+        })
+        pusher.trigger("blog_io", "like_blog", slug);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const dislikeBlog = async (slug: string, user: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        });
+        await prisma.like.delete({
+            where: {
+                userId_blogId: {userId: user, blogId: blog?.id as string}
+            }
+        })
+        pusher.trigger("blog_io", "dislike_blog", slug);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const saveBlogs = async (slug: string, userId: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        })
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                saved: {
+                    connect: {
+                        id: blog?.id
+                    }
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+} 
+
+export const unsaveBlogs = async (slug: string, userId: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        })
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                saved: {
+                    disconnect: {
+                        id: blog?.id
+                    }
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const isLikedByUser = async (slug: string, user: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        })
+        const like = await prisma.like.findUnique({
+            where: {
+                userId_blogId: {userId: user, blogId:blog?.id as string}
+            }
+        })
+
+        if (like) return true
+        return false
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const isSavedByUser = async (slug: string, user: string) => {
+    try {
+        const blog = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        })
+        const isSaved = await prisma.user.count({
+            where: {
+                id: user,
+                saved: {
+                    some: {
+                        id: blog?.id
+                    }
+                }
+            },
+        })
+
+        return isSaved > 0;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getBookmarkedBlogs = async (userId: string) => {
+    try {
+        const blogs = await prisma.user.findMany({
+            where: {
+                id: userId
+            },
+            include: {
+                saved: {
+                    include: {
+                        author: true
+                    }
+                }
+            }
+        })
+
+        return blogs[0].saved;
     } catch (error) {
         console.log(error);
     }

@@ -38,6 +38,8 @@
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.15",
     "novel": "^0.5.0",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.10",

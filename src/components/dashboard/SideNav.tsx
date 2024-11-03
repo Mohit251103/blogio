@@ -8,7 +8,7 @@ import {
     SelectLabel,
     SelectGroup
 } from "@/components/ui/select"
-import { BookDashed, LayoutDashboard, NotebookPen, PlusCircle, X } from "lucide-react";
+import { BookDashed, Bookmark, LayoutDashboard, NotebookPen, PlusCircle, X } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { PopupContext } from "@/context/popup-provider";
 
@@ -61,21 +61,25 @@ const SideNav = () => {
                         <PlusCircle className="w-4 h-4 mr-2" />
                         <p className="text-md"> Create Blog</p>
                     </SideNavButton>
-                    <Select>
+                    <SideNavButton className={`flex items-center my-2`} route="/bookmarks">
+                        <Bookmark className="w-4 h-4 mr-2" />
+                        <p className="text-md"> Bookmark</p>
+                    </SideNavButton>
+                    {/* <Select>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Your Subscriptions" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>No Subscriptions</SelectLabel>
-                                {/* <SelectItem value="apple">Apple</SelectItem>
+                                <SelectItem value="apple">Apple</SelectItem>
                             <SelectItem value="banana">Banana</SelectItem>
                             <SelectItem value="blueberry">Blueberry</SelectItem>
                             <SelectItem value="grapes">Grapes</SelectItem>
-                            <SelectItem value="pineapple">Pineapple</SelectItem> */}
+                            <SelectItem value="pineapple">Pineapple</SelectItem>
                             </SelectGroup>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
                 </div>
             </div>
         </div>

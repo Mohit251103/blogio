@@ -11,6 +11,7 @@ import { BlogProvider } from "@/context/blog-context";
 import { Suspense } from "react";
 import NewBlogStarter from "@/components/dashboard/NewBlogStarter";
 import { ProfileProvider } from "@/context/profile-context";
+import { PusherProvider } from "@/context/pusher-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -51,8 +52,10 @@ export default function RootLayout({
                   <EdgeStoreProvider>
                     <EditorProvider>
                       <BlogProvider>
+                        <PusherProvider>
                         <NewBlogStarter />
-                        {children}
+                          {children}
+                        </PusherProvider>
                       </BlogProvider>
                     </EditorProvider>
                   </EdgeStoreProvider>

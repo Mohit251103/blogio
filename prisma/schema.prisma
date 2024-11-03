@@ -24,6 +24,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   subscribers   Subscriber[]
+  saved         Blog[]       @relation("SavedBlogs")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,15 +81,18 @@ model VerificationToken {
 }
 
 model Blog {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   userId      String
   title       String
-  slug        String  @unique
+  slug        String   @unique
   description String
   tags        Tag[]
-  author      User    @relation(fields: [userId], references: [id])
+  author      User     @relation(fields: [userId], references: [id])
   Like        Like[]
-  isPublished Boolean @default(false)
+  readers     User[]   @relation("SavedBlogs")
+  isPublished Boolean  @default(false)
+  publishedOn DateTime? 
+  createdOn   DateTime @default(now())
 }
 
 model Like {
