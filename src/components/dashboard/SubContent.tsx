@@ -42,7 +42,7 @@ const SubContent: React.FC = () => {
             return { ...user, desc: user.description as string };
         });
         
-        let filtered_users = [];
+        const filtered_users = [];
         for (const user of users!) {
             const subscribed = await isSubscribed(user.id);
             if (!subscribed && user.id != session?.user?.id) {
