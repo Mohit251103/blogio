@@ -99,7 +99,7 @@ export const getTags = async (name: string) => {
     }
 }
 
-export const getSearchedResults = async (query: string, type: string) => {
+export const getSearchedResults = async (query: string, type: string, id?: string) => {
     "use server";
     try {
         if (type === "tags") {
@@ -108,10 +108,8 @@ export const getSearchedResults = async (query: string, type: string) => {
         if (type === "blogs") {
             const blogs = await prisma.blog.findMany({
                 where: {
+                    isPublished: true,
                     OR: [
-                        {
-                            isPublished: true
-                        },
                         {
                             title: {
                                 contains: query,
@@ -127,13 +125,14 @@ export const getSearchedResults = async (query: string, type: string) => {
                         {
                             slug: {
                                 contains: query,
-                                mode:"insensitive"
+                                mode: "insensitive"
                             }
                         }
                     ]
                 },
                 include: {
-                    author: true
+                    author: true,
+                    Like: true
                 }
             })
             return blogs;
@@ -160,7 +159,13 @@ export const getSearchedResults = async (query: string, type: string) => {
                     subscribers: true
                 }
             })
-            return author;
+
+            const res = [];
+            for (const a of author) {
+                const subs = await checkSubscription(id!, a.id);
+                res.push({ ...a, isSubscribed: subs ?? false });
+            }
+            return res;
         }
     } catch (error) {
         console.log(error);
@@ -253,6 +258,21 @@ export const subscribeUsers = async (subscriber: string, author: string) => {
     }
 }
 
+export const unsubscribeUser = async (subscriber: string, author: string) => {
+    try {
+        await prisma.subscriber.delete({
+            where: {
+                userId_subscriberId: {
+                    userId: author,
+                    subscriberId: subscriber
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const checkSubscription = async (subscriber: string, author: string) => {
     try {
         const subscription = await prisma.subscriber.findUnique({
@@ -283,7 +303,7 @@ export const getLikes = async (slug: string) => {
     }
 }
 
-export const likeBlog = async (slug:string, user: string) => {
+export const likeBlog = async (slug: string, user: string) => {
     try {
         const blog = await prisma.blog.findUnique({
             where: {
@@ -311,7 +331,7 @@ export const dislikeBlog = async (slug: string, user: string) => {
         });
         await prisma.like.delete({
             where: {
-                userId_blogId: {userId: user, blogId: blog?.id as string}
+                userId_blogId: { userId: user, blogId: blog?.id as string }
             }
         })
         pusher.trigger("blog_io", "dislike_blog", slug);
@@ -342,7 +362,7 @@ export const saveBlogs = async (slug: string, userId: string) => {
     } catch (error) {
         console.log(error)
     }
-} 
+}
 
 export const unsaveBlogs = async (slug: string, userId: string) => {
     try {
@@ -377,7 +397,7 @@ export const isLikedByUser = async (slug: string, user: string) => {
         })
         const like = await prisma.like.findUnique({
             where: {
-                userId_blogId: {userId: user, blogId:blog?.id as string}
+                userId_blogId: { userId: user, blogId: blog?.id as string }
             }
         })
 
@@ -421,7 +441,8 @@ export const getBookmarkedBlogs = async (userId: string) => {
             include: {
                 saved: {
                     include: {
-                        author: true
+                        author: true,
+                        Like: true
                     }
                 }
             }

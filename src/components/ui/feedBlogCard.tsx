@@ -26,14 +26,15 @@ import { PusherContext } from "@/context/pusher-context";
 //     )
 // }
 
-const FeedBlogCard = ({ title, slug, author }: {
+const FeedBlogCard = ({ title, slug, author, like }: {
     title: string, 
     slug: string, 
     author: {
         id: string,
         name: string,
         profile: string
-    }
+    },
+    like?:number
 }) => {
 
     const { data: session } = useSession();
@@ -91,26 +92,29 @@ const FeedBlogCard = ({ title, slug, author }: {
     }
 
     useEffect(() => {
-        const getBlogLikes = async () => {
-            const likes = await getLikes(slug);
-            setLikes(likes ?? 0);
-        }
+        setLikes(like ?? 0);
+        // const getBlogLikes = async () => {
+        //     const likes = await getLikes(slug);
+        //     setLikes(likes ?? 0);
+        // }
 
         const handleLikeEvent = (slug_server: string) => {
             if (slug === slug_server) {
                 setLikes(prevLike => prevLike + 1);
+                router.refresh()
             }
         }
 
         const handleDisLikeEvent = (slug_server: string) => {
             if (slug === slug_server) {
                 setLikes(prevLike => prevLike - 1);
+                router.refresh();
             }
         }
 
         channel?.bind("like_blog", handleLikeEvent);
         channel?.bind("dislike_blog", handleDisLikeEvent);
-        getBlogLikes();
+        // getBlogLikes();
 
         return () => {
             channel?.unbind("like_blog", handleLikeEvent);
@@ -119,12 +123,14 @@ const FeedBlogCard = ({ title, slug, author }: {
     },[])
 
     useEffect(() => {
-        is_liked();
-        is_saved();
+        if (session) {
+            is_liked();
+            is_saved();
+        }
     },[session])
 
     return (
-        <Card className="flex w-full h-fit">
+        <Card className="flex w-full h-full">
             <div>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold hover:underline hover:cursor-pointer" onClick={handleClick}>

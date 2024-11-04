@@ -1,14 +1,15 @@
 "use client";
-import { getSearchedResults } from "@/actions";
+import { getSearchedResults, subscribeUsers, unsubscribeUser } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import FeedBlogCard from "@/components/ui/feedBlogCard";
 import { ModeToggle } from "@/components/ui/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Search } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,17 +29,69 @@ type IBlog = {
         id: string,
         name: string,
         image: string
-    }
+    },
+    likes: number
 }[];
 type IAuthor = {
     id: string,
-    name: string,
-    description: string,
-    image: string,
-    subscribers: []
-}[];
+    name: string|null,
+    desc: string,
+    image: string|null,
+    subscribers?: [],
+    isSubscribed?: boolean
+}[] | undefined;
+
+
+const UnsubscribeButton = ({ id, setUsers, subscriber }: {
+    id: string,
+    setUsers: React.Dispatch<SetStateAction<IAuthor>>,
+    subscriber: string
+}) => {
+    const router = useRouter();
+    const [unsubscribing, setUnsubscribing] = useState<boolean>(false);
+    const handleUnsubscribe = async () => {
+        setUnsubscribing(true);
+        await unsubscribeUser(subscriber, id);
+        setUsers((prev) => prev?.map((user) => {
+            if (user.id === id) {
+                return { ...user, isSubscribed: false }
+            }
+            return user
+        }))
+        setUnsubscribing(false);
+        router.refresh()
+    }
+    return (
+        <Button variant="outline" className="text-xs p-2 h-fit" onClick={handleUnsubscribe} disabled={unsubscribing}>{unsubscribing ? "Unsubscribing..." : "Unsubscribe"}</Button>
+    )
+}
+
+const SubscribeButton = ({ id, setUsers, subscriber }: {
+    id: string,
+    setUsers: React.Dispatch<SetStateAction<IAuthor>>,
+    subscriber: string
+}) => {
+    const router = useRouter();
+    const [subscribing, setSubscribing] = useState<boolean>(false);
+    const handleUnsubscribe = async () => {
+        setSubscribing(true);
+        await subscribeUsers(subscriber, id);
+        setUsers((prev) => prev?.map((user) => {
+            if (user.id === id) {
+                return { ...user, isSubscribed: true }
+            }
+            return user
+        }))
+        setSubscribing(false);
+        router.refresh()
+    }
+    return (
+        <Button className="text-xs p-2 h-fit" onClick={handleUnsubscribe} disabled={subscribing}>{subscribing ? "Subscribing..." : "Subscribe"}</Button>
+    )
+}
 
 const SearchPage = () => {
+    const { data: session } = useSession();
     const [query, setQuery] = useState<string>("");
     const [tags, setTags] = useState<ITag>([]);
     const [blogs, setBlogs] = useState<IBlog>([]);
@@ -52,14 +105,16 @@ const SearchPage = () => {
 
     const handleSearch = async () => {
         try {
-            const res = await getSearchedResults(query, type.toLowerCase());
-            console.log(res);
+            const res = await getSearchedResults(query, type.toLowerCase(), session?.user?.id);
             const ltype = type.toLowerCase();
             if (ltype === "tags") {
                 setTags(res as ITag);
             }
             else if (ltype === "blogs") {
-                setBlogs(res as IBlog);
+                const updatedRes = res?.map((blog: any) => {
+                    return { ...blog, likes: blog.Like.length };
+                })
+                setBlogs(updatedRes as IBlog);
             }
             else {
                 setAuthors(res as IAuthor);
@@ -73,6 +128,10 @@ const SearchPage = () => {
             {/* nav */}
             <div className="flex justify-between items-center my-3 w-full px-3">
                 <Button variant="outline" onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
+                <div className="flex w-fit justify-between items-center border rounded-xl">
+                    <button className={`${type === "blogs" ? "bg-muted" :"hover:bg-secondary hover:text-secondary-foreground"}  p-3 rounded-l-xl`} onClick={()=>{ router.push("/search/blogs") }}>Blogs</button>
+                    <button className={`${type === "author" ? "bg-muted" : "hover:bg-secondary hover:text-secondary-foreground"} p-3 rounded-r-xl`} onClick={()=> router.push("/search/author")}>Authors</button>
+                </div>
                 <ModeToggle />
             </div>
             <h1 className="text-3xl font-extrabold mt-12">Search <span>{type.toUpperCase()}</span></h1>
@@ -86,12 +145,12 @@ const SearchPage = () => {
                 </div>
             </form>
             {/* content */}
-            <div className="grow max-sm:max-w-[95vw] max-w-[70vw]">
+            <div className="grow max-sm:max-w-[95vw] sm:max-w-[70vw] min-w-[70vw] p-2">
                 {tags && <div className=""></div>}
-                {blogs && <div className="grow flex flex-wrap gap-2 px-2">
+                {blogs && <div className="grow flex flex-wrap gap-2 px-2 w-full">
                     {blogs.map((blog, index) => {
-                        return <div key={index} className="">
-                            <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} />
+                        return <div key={index} className="w-[45%] max-md:w-full min-h-[20vh] max-h-fit">
+                            <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} like={blog.likes}/>
                         </div>
                     })}
                 </div>}
@@ -100,15 +159,16 @@ const SearchPage = () => {
                         return <Card key={index} className="hover:cursor-pointer" onClick={() => { }}>
                             <CardHeader>
                                 <CardTitle className="text-xl font-semibold flex justify-start items-center">
-                                    <Image src={a.image} alt="Author Profile" width={50} height={50} className="rounded-full mx-1 aspect-square mr-2" />
+                                    <Image src={a.image as string} alt="Author Profile" width={50} height={50} className="rounded-full mx-1 aspect-square mr-2" />
                                     <p className="text-xl">{a.name}</p>
                                 </CardTitle>
                                 <CardDescription className="flex items-center">
-                                    {a.description ? <p className="lg:text-sm text-sm text-secondary-foreground">{a.description}</p> : <p className="lg:text-sm text-sm text-secondary-foreground">...</p>}
+                                    {a.desc ? <p className="lg:text-sm text-sm text-secondary-foreground">{a.desc}</p> : <p className="lg:text-sm text-sm text-secondary-foreground">...</p>}
                                 </CardDescription>
                             </CardHeader>
                             <CardFooter className="flex justify-start">
-                                <Button className="text-xs w-fit h-fit">Subscribe</Button>
+                                {!a.isSubscribed && <SubscribeButton id={a.id} setUsers={setAuthors} subscriber={session?.user?.id as string} />}
+                                {a.isSubscribed && <UnsubscribeButton id={a.id} setUsers={setAuthors} subscriber={session?.user?.id as string} />}
                             </CardFooter>
                         </Card>
                     })}

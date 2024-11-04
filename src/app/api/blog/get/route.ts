@@ -58,7 +58,8 @@ export const GET = async (req: NextRequest) => {
                     isPublished: origin==="feed" || origin==="publish"
                 },
                 include: {
-                    author: true
+                    author: true,
+                    Like: true
                 },
                 orderBy: {
                     publishedOn:"asc"
@@ -72,7 +73,7 @@ export const GET = async (req: NextRequest) => {
                 where: {
                     isPublished: true
                 },
-                include: { author: true }
+                include: { author: true, Like: true }
             }
             );
             return Response.json({ data: blogs, message: "Blogs fetched", status: 200 });

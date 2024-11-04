@@ -6,7 +6,8 @@ interface blog {
     userId: string,
     title: string,
     slug: string
-    author: any
+    author: any,
+    likes?: number
 }
 
 interface IDraftPublished {

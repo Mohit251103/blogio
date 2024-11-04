@@ -25,7 +25,11 @@ const ContentArea = () => {
     const getBlogs = async () => {
         try {
             const res = await axiosInstance.get("/api/blog/get?type=feed");
-            setBlogs(res.data.data);
+            const updatedRes = res.data.data.map((blog:any) => {
+                return { ...blog, likes: blog.Like.length };
+            })
+            // console.log(updatedRes);
+            setBlogs(updatedRes);
         } catch (error) {
             console.log(error);
         }
@@ -64,7 +68,7 @@ const ContentArea = () => {
                 </Card> */}
                 {blogs.length !== 0 && blogs.map((blog, index) => {
                     return (
-                        <FeedBlogCard key={index} title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name, profile: blog.author.image }} />
+                        <FeedBlogCard key={index} title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name, profile: blog.author.image }} like={blog.likes}/>
                     )
                 })
                 }
