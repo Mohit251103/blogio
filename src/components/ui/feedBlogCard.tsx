@@ -1,30 +1,14 @@
-// import { BookOpen } from "lucide-react";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
 import Image from "next/image"; 
-// import { handleServerRedirect } from "@/actions";
-// import { Button } from "./button";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { dislikeBlog, getLikes, isLikedByUser, isSavedByUser, likeBlog, saveBlogs, unsaveBlogs } from "@/actions";
 import { useSession } from "next-auth/react";
 import { PusherContext } from "@/context/pusher-context";
-
-// const NormalRouteButton = (
-//     { children, slug }: { children: React.ReactNode, slug: string }
-// ) => {
-//     const handleSubmit = handleServerRedirect.bind(null, `/editor/preview/${slug}`)
-//     return (
-//         <form action={handleSubmit}>
-//             <Button variant="default" type="submit">
-//                 {children}
-//             </Button>
-//         </form>
-//     )
-// }
 
 const FeedBlogCard = ({ title, slug, author, like }: {
     title: string, 
@@ -93,28 +77,21 @@ const FeedBlogCard = ({ title, slug, author, like }: {
 
     useEffect(() => {
         setLikes(like ?? 0);
-        // const getBlogLikes = async () => {
-        //     const likes = await getLikes(slug);
-        //     setLikes(likes ?? 0);
-        // }
 
         const handleLikeEvent = (slug_server: string) => {
             if (slug === slug_server) {
                 setLikes(prevLike => prevLike + 1);
-                router.refresh()
             }
         }
 
         const handleDisLikeEvent = (slug_server: string) => {
             if (slug === slug_server) {
                 setLikes(prevLike => prevLike - 1);
-                router.refresh();
             }
         }
 
         channel?.bind("like_blog", handleLikeEvent);
         channel?.bind("dislike_blog", handleDisLikeEvent);
-        // getBlogLikes();
 
         return () => {
             channel?.unbind("like_blog", handleLikeEvent);
