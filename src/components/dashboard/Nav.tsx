@@ -2,10 +2,10 @@ import { auth, signOut } from "@/auth"
 import { ModeToggle } from "../ui/theme"
 import Image from "next/image";
 import Hamburger from "../ui/hamburger";
-import SearchComponent from "@/components/dashboard/Search"
+import SearchIcon from '@mui/icons-material/Search';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { LogOutIcon, Settings, User } from "lucide-react";
+import { LogOutIcon, User } from "lucide-react";
 import { redirect } from "next/navigation";
 
 const ProfileButton = () => {
@@ -30,6 +30,10 @@ const Nav = async ({ origin }: { origin?: string }) => {
         "use server";
         redirect("/dashboard");
     }
+    const handleSearch = async () => {
+        "use server";
+        redirect("/search/blogs")
+    }
     return (
         <div className="w-full border-b flex justify-between px-2 py-1 overflow-y-auto overflow-x-hidden sticky top-0 bg-opacity-60 backdrop-blur-sm z-40">
             <div className="ml-2 max-sm:ml-1 flex">
@@ -43,6 +47,9 @@ const Nav = async ({ origin }: { origin?: string }) => {
             </div>
             <div className="flex justify-center items-center">
                 {/* <SearchComponent origin={origin} /> */}
+                <form action={handleSearch}>
+                    <Button type="submit" variant={"secondary"} className="w-fit h-fit"><SearchIcon className="w-4 h-4"/></Button>
+                </form>
                 <ModeToggle />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

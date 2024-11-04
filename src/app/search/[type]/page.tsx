@@ -34,9 +34,9 @@ type IBlog = {
 }[];
 type IAuthor = {
     id: string,
-    name: string|null,
+    name: string | null,
     desc: string,
-    image: string|null,
+    image: string | null,
     subscribers?: [],
     isSubscribed?: boolean
 }[] | undefined;
@@ -128,15 +128,15 @@ const SearchPage = () => {
             {/* nav */}
             <div className="flex justify-between items-center my-3 w-full px-3">
                 <Button variant="outline" onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
-                <div className="flex w-fit justify-between items-center border rounded-xl">
-                    <button className={`${type === "blogs" ? "bg-muted" :"hover:bg-secondary hover:text-secondary-foreground"}  p-3 rounded-l-xl`} onClick={()=>{ router.push("/search/blogs") }}>Blogs</button>
-                    <button className={`${type === "author" ? "bg-muted" : "hover:bg-secondary hover:text-secondary-foreground"} p-3 rounded-r-xl`} onClick={()=> router.push("/search/author")}>Authors</button>
-                </div>
                 <ModeToggle />
+            </div>
+            <div className="flex w-fit justify-between items-center border rounded-xl">
+                <button className={`${type === "blogs" ? "bg-muted" : "hover:bg-secondary hover:text-secondary-foreground"}  p-3 rounded-l-xl`} onClick={() => { router.push("/search/blogs") }}>Blogs</button>
+                <button className={`${type === "author" ? "bg-muted" : "hover:bg-secondary hover:text-secondary-foreground"} p-3 rounded-r-xl`} onClick={() => router.push("/search/author")}>Authors</button>
             </div>
             <h1 className="text-3xl font-extrabold mt-12">Search <span>{type.toUpperCase()}</span></h1>
             {/* search bar */}
-            <form onSubmit={handleSubmit(handleSearch)} className="my-12">
+            <form onSubmit={handleSubmit(handleSearch)} className="my-12 px-2">
                 <div className="rounded-2xl flex justify-center items-center h-fit w-fit pr-2 md:w-[50vw] w-[75vw] border">
                     <input type="text" className="bg-none px-4 text-xl font-md rounded-l-2xl w-[90%] p-2 mr-2 focus:outline outline-zinc-300 bg-secondary" {...register('query')} id="query" onChange={(e) => setQuery(e.target.value)} />
                     <button type="submit" className="px-1 grow h-full flex justify-center">
@@ -150,7 +150,7 @@ const SearchPage = () => {
                 {blogs && <div className="grow flex flex-wrap gap-2 px-2 w-full">
                     {blogs.map((blog, index) => {
                         return <div key={index} className="w-[45%] max-md:w-full min-h-[20vh] max-h-fit">
-                            <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} like={blog.likes}/>
+                            <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: blog.author.id, name: blog.author.name as string, profile: blog.author.image as string }} like={blog.likes} />
                         </div>
                     })}
                 </div>}
