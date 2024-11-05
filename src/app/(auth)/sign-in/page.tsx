@@ -17,10 +17,10 @@ const SignIn = () => {
                         <GithubSignUpButton />
                     </div>
                 </div>
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                     <p className="text-sm text-slate-500">Don't have an account?</p>
                     <NavigateButton location="sign-up">Sign Up</NavigateButton>
-                </div>
+                </div> */}
             </div>
 
         </div>
