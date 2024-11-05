@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex justify-center items-center">
             <ModeToggle />
             <Link href={"https://github.com/mohit251103"} target="_blank" referrerPolicy="no-referrer" className="mx-2"><GitHubLogoIcon width={25} height={25} className="mx-2" /></Link>
-            <Link href={"https://x.com/mnegi_/"} target="_blank" referrerPolicy="no-referrer" className="mx-2"><TwitterLogoIcon width={25} height={25} className="mx-2" /></Link>
+            <Link href={"https://x.com/mnegi_/"} target="_blank" referrerPolicy="no-referrer" className="mx-2"><TwitterLogoIcon width={25} height={25} className="mr-2" /></Link>
           </div>
         </div>
 
