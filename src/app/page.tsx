@@ -3,6 +3,7 @@ import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Animation from "@/components/ui/animation";
+import { ModeToggle } from "@/components/ui/theme";
 
 export default function Home() {
   const handleSignUp = async () => {
@@ -16,6 +17,7 @@ export default function Home() {
         <div className="w-full px-4 mx-auto flex justify-between items-center border-b py-6">
           <h1 className="text-3xl font-extrabold">Blog.io</h1>
           <div className="flex justify-center items-center">
+            <ModeToggle />
             <Link href={"https://github.com/mohit251103"} target="_blank" referrerPolicy="no-referrer" className="mx-2"><GitHubLogoIcon width={25} height={25} className="mx-2" /></Link>
             <Link href={"https://x.com/mnegi_/"} target="_blank" referrerPolicy="no-referrer" className="mx-2"><TwitterLogoIcon width={25} height={25} className="mx-2" /></Link>
           </div>
