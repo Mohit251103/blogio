@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-background text-foreground">
       {/* nav */}
-      <div className="md:w-[70%] w-[85%] flex flex-col border-r border-l min-h-screen">
+      <div className="md:w-[70%] w-[95%] flex flex-col border-r border-l min-h-screen">
         <div className="w-full px-4 mx-auto flex justify-between items-center border-b py-6">
           <h1 className="text-3xl font-extrabold">Blog.io</h1>
           <div className="flex justify-center items-center">
