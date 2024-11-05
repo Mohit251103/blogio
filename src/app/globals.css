@@ -109,8 +109,7 @@ body {
     -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
     mask: linear-gradient(90deg,
         transparent,
-        white 20%
-        white 80%,
+        white 20% white 80%,
         transparent);
   }
 
@@ -126,6 +125,16 @@ body {
     mask: linear-gradient(90deg,
         white 80%,
         transparent);
+  }
+
+
+  .inconsolata-900 {
+    font-family: "Inconsolata", monospace;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
   }
 
   body {
