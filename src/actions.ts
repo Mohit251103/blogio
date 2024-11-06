@@ -453,3 +453,19 @@ export const getBookmarkedBlogs = async (userId: string) => {
         console.log(error);
     }
 }
+
+export const getUserDetails = async (userId: string) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            include: {
+                subscribers: true
+            }
+        })
+        return user
+    } catch (error) {
+        console.log(error);
+    }
+}
