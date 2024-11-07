@@ -469,3 +469,37 @@ export const getUserDetails = async (userId: string) => {
         console.log(error);
     }
 }
+
+export const getSubscribers = async (subscriber : any) => {
+    try {
+        const arr = subscriber.map((s:any)=>{ return s.subscriberId })
+        const subscribers = await prisma.user.findMany({
+            where: {
+                id: {
+                    in: arr
+                }
+            }
+        })
+
+        return subscribers
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getBlogsOfUser = async (userId: string) => {
+    try {
+        const res = await prisma.blog.findMany({
+            where: {
+                userId: userId
+            },
+            include: {
+                Like: true
+            }
+        })
+
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+}
