@@ -103,7 +103,7 @@ const PublicProfile = () => {
             <div className="flex justify-between px-2 border-b p-2">
                 <button className="bg-none text-2xl font-extrabold my-auto" onClick={() => router.push("/dashboard")}>Blog.io</button>
                 <div className="flex">
-                    <ModeToggle/>
+                    <ModeToggle />
                     <button className="bg-none rounded-md hover:bg-secondary p-2" onClick={() => router.push("/dashboard")}>
                         <LucideArrowRightToLine className="w-4 h-4" />
                     </button>
@@ -122,8 +122,8 @@ const PublicProfile = () => {
                         <div className="grid grid-cols-auto grid-flow-col relative">
                             {subscribers?.slice(0, 4).map((subs, index) => {
                                 return (
-                                    <div className="w-fit h-fit rounded-full -translate-x-2 first:translate-x-0">
-                                        <Image key={index} src={subs.image!} width={30} height={30} alt="subscriber pic" className="peer rounded-full aspect-square border-white border-2" />
+                                    <div key={index} className="w-fit h-fit rounded-full -translate-x-2 first:translate-x-0">
+                                        <Image src={subs.image!} width={30} height={30} alt="subscriber pic" className="peer rounded-full aspect-square border-white border-2" />
                                         <p className="p-2 opacity-0 peer-hover:opacity-100 invisible peer-hover:visible transition-opacity duration-200 absolute top-0 -translate-y-16 text-xs bg-background text-foreground border rounded-md w-fit p-1">{subs.name}</p>
                                     </div>
                                 )
@@ -136,8 +136,10 @@ const PublicProfile = () => {
                     <div className="w-[80%] max-h-[80vh] bg-secondary rounded-xl relative">
                         <h1 className="text-2xl text-extrabold w-full bg-opacity-70 backdrop-blur-sm p-2 sticky top-0">Published Work</h1>
                         <div className="flex p-4 flex-wrap gap-2 max-h-[70vh] overflow-auto mod-scroll">
-                            {blogs?.map((blog) => {
-                                return <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: userId, name: user?.name!, profile: user?.image! }} like={blog.Like.length}></FeedBlogCard>
+                            {blogs?.map((blog, index) => {
+                                return <div key={index}  className="w-full h-full">
+                                    <FeedBlogCard title={blog.title} slug={blog.slug} author={{ id: userId, name: user?.name!, profile: user?.image! }} like={blog.Like.length}></FeedBlogCard>
+                                </div>
                             })}
                         </div>
                     </div>
