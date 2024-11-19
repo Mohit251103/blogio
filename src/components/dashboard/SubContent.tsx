@@ -68,7 +68,7 @@ const SubContent: React.FC = () => {
         })
 
         setTags(tags?.slice(0, 10) ?? []);
-        setUsers(filtered_users?.slice(0, 5));
+        setUsers(filtered_users?.slice(0, 4));
         setShowContent(true);
     }
 
