@@ -1,2 +1,0 @@
-make the subcontent fast.
-will also try to make the feeds load faster
