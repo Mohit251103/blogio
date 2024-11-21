@@ -73,6 +73,7 @@ const SubContent: React.FC = () => {
     }
 
     useEffect(() => {
+        console.log("session changed .. rerendering")
         if (session) {
             getData();
         }

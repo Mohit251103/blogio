@@ -1,2 +1,2 @@
-had to improve tags part completely ( most of the work is done, should add some raw tags and then fetch them from the database )
-preview page improvements (author details, subscribe button, like, share etc.)
+make the subcontent fast.
+will also try to make the feeds load faster

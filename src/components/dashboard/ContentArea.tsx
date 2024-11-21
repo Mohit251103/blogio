@@ -39,6 +39,7 @@ const ContentArea = () => {
     }
 
     useEffect(() => {
+        console.log("From content area ... ");
         getBlogs(); 
     }, [])
     

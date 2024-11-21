@@ -229,7 +229,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
             {
                 tableMenu && <TableMenu editor={editor} top={scroll.yscroll + selectionPos.top - 180} left={scroll.xscroll + selectionPos.left} />
             }
-            <p className='text-2xl font-extrabold my-2'>{content.title}</p>
+            <p className='text-4xl font-extrabold my-2'>{content.title}</p>
             <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start' onKeyUp={(e) => handleKeyCapture(e)} >
                 {/* {children} */}
             </EditorContent>
