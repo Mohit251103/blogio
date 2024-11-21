@@ -29,7 +29,7 @@ const Preview = () => {
 
     return (
         <div className="max-w-[70vw] min-w-[70vw] mx-auto">
-            <p className="text-2xl font-extrabold text-center mt-4">{content.title}</p>
+            <p className="text-4xl font-extrabold text-center mt-4">{content.title}</p>
             <div className="ProseMirror" dangerouslySetInnerHTML={{__html:content.description}}></div>
         </div>
     )

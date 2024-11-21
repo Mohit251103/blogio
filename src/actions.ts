@@ -503,3 +503,32 @@ export const getBlogsOfUser = async (userId: string) => {
         console.log(error)
     }
 }
+
+export const isPublished = async (slug: string) => {
+    try {
+        const res = await prisma.blog.findUnique({
+            where: {
+                slug: slug
+            }
+        })
+
+        return res?.isPublished;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const unpublishBlog = async (slug: string) => {
+    try {
+        await prisma.blog.update({
+            where: {
+                slug: slug
+            },
+            data: {
+                isPublished: false
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}

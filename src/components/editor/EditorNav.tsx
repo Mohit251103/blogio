@@ -2,25 +2,26 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../ui/theme";
 import { useSession } from "next-auth/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EditorContext } from "@/context/editor-context";
 import { Check, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { publishBlog } from "@/actions";
+import { isPublished, publishBlog, unpublishBlog } from "@/actions";
 import { toast } from "@/hooks/use-toast";
 
-const EditorNav = ({slug}:{slug:string|null}) => {
+const EditorNav = ({ slug }: { slug: string | null }) => {
     const user = useSession().data?.user;
     const { drafting } = useContext(EditorContext);
     const router = useRouter();
-    const [publishing, setPublishing] = useState(false);
+    const [processing, setProcessing] = useState(false);
+    const [published, setPublished] = useState<boolean>(false);
 
     const handlePublish = async () => {
-        setPublishing(true);
+        setProcessing(true);
         try {
-            await publishBlog(slug?? "");
+            await publishBlog(slug ?? "");
             toast({
-                title:"Published successfully"
+                title: "Published successfully"
             })
         } catch (error) {
             toast({
@@ -29,14 +30,42 @@ const EditorNav = ({slug}:{slug:string|null}) => {
             console.log(error);
         }
         finally {
-            setPublishing(false);
+            setProcessing(false);
+            setPublished(true);
         }
     }
+
+    const handleUnPublish = async () => {
+        setProcessing(true);
+        try {
+            await unpublishBlog(slug!);
+            toast({
+                title: "Unpublished!!"
+            })
+        } catch (error) {
+            toast({
+                title: "Some problem occured"
+            })
+            console.log(error);
+        }
+        finally {
+            setProcessing(false);
+            setPublished(false);
+        }
+    }
+
+    useEffect(() => {
+        const check = async () => {
+            const res = await isPublished(slug!);
+            setPublished(res!);
+        }
+        check();
+    }, [])
 
     return (
         <div className="w-full flex items-center justify-between mb-5 p-1 h-fit">
             <div className="flex items-center justify-center max-sm:hidden  ">
-                <Image src={user?.image as string} alt="profile" width={30} height={30} className="rounded-full aspect-square mr-2"/>
+                <Image src={user?.image as string} alt="profile" width={30} height={30} className="rounded-full aspect-square mr-2" />
                 <p className="text-sm font-bold text-foreground">{user?.name}</p>
             </div>
             <div className="flex items-center">
@@ -49,10 +78,16 @@ const EditorNav = ({slug}:{slug:string|null}) => {
                     <p>Drafted</p>
                 </div>}
                 <ModeToggle />
-                <Button variant={"outline"} onClick={() => router.push(`/editor/preview/${slug}`)}>Preview</Button>
-                {/* <form action={handlePublish}> */}
-                <Button onClick={handlePublish} disabled={publishing}>{publishing?'Publishing...':'Publish'}</Button>
-                {/* </form> */}
+
+                {!published &&
+                    <>
+                        <Button variant={"outline"} onClick={() => router.push(`/editor/preview/${slug}`)}>Preview</Button>
+                        <Button onClick={handlePublish} disabled={processing}>{processing ? 'Publishing...' : 'Publish'}</Button>
+                    </>
+                }
+
+                {published && <Button onClick={handleUnPublish} disabled={processing}>{processing ? 'Unpublishing...' : 'Unpublish'}</Button>}
+
             </div>
         </div>
     )
