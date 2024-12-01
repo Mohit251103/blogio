@@ -39,6 +39,9 @@ model Subscriber {
   subscribedAt DateTime @default(now())
 
   @@unique([userId, subscriberId])
+  @@index([userId, subscriberId])
+  @@index([subscriberId])
+  @@index([userId])
 }
 
 model Account {

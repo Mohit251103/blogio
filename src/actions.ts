@@ -160,11 +160,7 @@ export const getSearchedResults = async (query: string, type: string, id?: strin
                 }
             })
 
-            const res = [];
-            for (const a of author) {
-                const subs = await checkSubscription(id!, a.id);
-                res.push({ ...a, isSubscribed: subs ?? false });
-            }
+            const res = await checkSubscription(id!, author.map((a) => a.id));
             return res;
         }
     } catch (error) {
@@ -192,11 +188,15 @@ export const getAllTags = async () => {
     try {
         const tags = await prisma.tag.groupBy({
             by: 'name',
+            _count: {
+                name: true
+            },
             orderBy: {
                 _count: {
                     name: 'desc'
                 }
-            }
+            },
+            take: 10
         });
         return tags;
     } catch (error) {
@@ -208,11 +208,21 @@ export const getTopUsers = async () => {
     "use server";
     try {
         const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                description: true,
+                _count: {
+                  select: { subscribers: true}
+              }
+            },
             orderBy: {
                 subscribers: {
                     _count: 'desc'
                 }
-            }
+            },
+            take: 10
         })
         return users;
     } catch (error) {
@@ -273,15 +283,31 @@ export const unsubscribeUser = async (subscriber: string, author: string) => {
     }
 }
 
-export const checkSubscription = async (subscriber: string, author: string) => {
+export const checkSubscription = async (subscriber: string, authors: string[]) => {
     try {
-        const subscription = await prisma.subscriber.findUnique({
+        const subscription = await prisma.subscriber.findMany({
             where: {
-                userId_subscriberId: { userId: author, subscriberId: subscriber }
+                subscriberId: subscriber,
+                userId: {
+                    in: authors
+                }
             }
         })
-        if (subscription) return true;
-        return false;
+        const subscribed_users = subscription.map((user) => user.userId);
+        const res = await prisma.user.findMany({
+            where: {
+                id: {
+                    in: subscribed_users
+                },
+            },
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                description: true
+            }
+        })
+        return res
     } catch (error) {
         console.log(error);
     }

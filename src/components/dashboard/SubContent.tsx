@@ -2,12 +2,13 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { checkSubscription, getAllTags, getTopUsers, subscribeUsers } from "@/actions";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import { ProfileContext } from "@/context/profile-context";
 
 const SubscribeButton = ({ id, setUsers }: { id: string, setUsers: React.Dispatch<SetStateAction<{ id: string, name: string | null, image: string | null, desc: string }[] | undefined>> }) => {
     const { data: session } = useSession();
@@ -37,46 +38,73 @@ const SubContent: React.FC = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [users, setUsers] = useState<{ id: string, name: string | null, image: string | null, desc: string }[] | undefined>([])
     const [showContent, setShowContent] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const router = useRouter();
-    const { data: session } = useSession();
+    const { session } = useContext(ProfileContext);
 
-    const isSubscribed = async (author: string) => {
-        const res = await checkSubscription(session?.user?.id as string, author);
-        if (res) {
-            return true;
-        }
-        return false;
+    const isSubscribed = async (authors: string[]) => {
+        const res = await checkSubscription(session?.user?.id as string, authors);
+        return res;
     }
+
+    let count = 0;
 
     const getData = async () => {
-        const res = await getAllTags();
-        const res_2 = await getTopUsers();
-        const users = res_2?.map((user) => {
-            return { ...user, desc: user.description as string };
-        });
+        setLoading(true);
+        count++;
+        try {
+            
+            // console.log("entered", count);
+            // const res = await getAllTags();
+            
+            // console.log("mid", count);
+            // const res_2 = await getTopUsers();
+            const [res, res_2] = await Promise.all([getAllTags(), getTopUsers()])
+            const users = res_2?.map((user) => {
+                return { ...user, desc: user.description as string };
+            });
+            console.log(users);
+    
+            const subscribed_users = await isSubscribed(users?.map((user) => user.id)!);
+    
+            // const  = await Promise.all(unresolved_users!)
+            // const filtered_users: any[] = [];
+            // users?.forEach((user, idx) => {
+            //     if (!subscribed_users[idx] && user.id != session?.user?.id) {
+            //         filtered_users.push(user);
+            //     }
+            // })
+    
+            const tags = res?.map((tag) => {
+                return tag.name;
+            })
+    
+            setTags(tags!);
+            setUsers(subscribed_users?.map((usr) => { return { ...usr, desc: usr.description as string } }).slice(0, 4));
+            setShowContent(true);
+            // console.log("reached here?", count)
 
-        const filtered_users = [];
-        for (const user of users!) {
-            const subscribed = await isSubscribed(user.id);
-            if (!subscribed && user.id != session?.user?.id) {
-                filtered_users.push(user);
-            }
+        } catch (error) {
+            console.log(error);
         }
-        const tags = res?.map((tag) => {
-            return tag.name;
-        })
-
-        setTags(tags?.slice(0, 10) ?? []);
-        setUsers(filtered_users?.slice(0, 4));
-        setShowContent(true);
-    }
+        finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        console.log("session changed .. rerendering")
-        if (session) {
-            getData();
+
+        console.log(showContent, session);
+        console.log(users);
+        async function init() {
+            if (session && !loading && users!.length==0) {
+                await getData();
+            }
         }
+
+        init();
+
     }, [session])
 
     if (!showContent) {

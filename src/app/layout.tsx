@@ -46,22 +46,22 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Suspense>
-            <ProfileProvider>
-              <SessionProvider>
+            <SessionProvider>
+              <ProfileProvider>
                 <PopupProvider>
                   <EdgeStoreProvider>
                     <EditorProvider>
                       <BlogProvider>
                         <PusherProvider>
-                        <NewBlogStarter />
+                          <NewBlogStarter />
                           {children}
                         </PusherProvider>
                       </BlogProvider>
                     </EditorProvider>
                   </EdgeStoreProvider>
                 </PopupProvider>
-              </SessionProvider>
-            </ProfileProvider>
+              </ProfileProvider>
+            </SessionProvider>
           </Suspense>
           <Toaster />
         </ThemeProvider>
