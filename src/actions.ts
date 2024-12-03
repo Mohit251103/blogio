@@ -285,19 +285,35 @@ export const unsubscribeUser = async (subscriber: string, author: string) => {
 
 export const checkSubscription = async (subscriber: string, authors: string[]) => {
     try {
-        const subscription = await prisma.subscriber.findMany({
-            where: {
-                subscriberId: subscriber,
-                userId: {
-                    in: authors
+
+        const res_promises = authors.map((author) => {
+            return prisma.subscriber.findUnique({
+                where: {
+                    userId_subscriberId: { userId: author, subscriberId: subscriber }
                 }
-            }
+            })
         })
-        const subscribed_users = subscription.map((user) => user.userId);
+
+        // const res_promises = prisma.subscriber.findMany({
+        //     where: {
+        //         subscriberId: subscriber,
+        //         userId: {
+        //             in: authors
+        //         }
+        //     }
+        // })
+
+        const subscription = await Promise.all(res_promises)
+        console.log(subscription)
+        const subscribed_users = subscription.map((user) => {
+            if (user != null) {
+                return user!.userId
+            }
+        }).filter((user) => user!=undefined);
         const res = await prisma.user.findMany({
             where: {
                 id: {
-                    in: subscribed_users
+                    in: subscribed_users as string[]
                 },
             },
             select: {

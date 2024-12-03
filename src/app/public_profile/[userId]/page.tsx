@@ -58,8 +58,8 @@ const PublicProfile = () => {
             const res_blog = await getBlogsOfUser(userId);
             console.log(res_sub)
             if (session) {
-                const subs = await checkSubscription(session.user?.id as string, userId)
-                setIsSubscribed(subs ?? false)
+                const subs = await checkSubscription(session.user?.id as string, [userId])
+                setIsSubscribed(subs?.length! > 0)
             }
             setUser(res);
             setSubscribers(res_sub);
