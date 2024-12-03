@@ -44,6 +44,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
     const { editorState, setEditorState, setDrafting, setBlogData } = useContext(EditorContext);
     const { editorMenu, setEditorMenu } = useContext<PopupContextType>(PopupContext);
     const [tableMenu, setTableMenu] = useState<boolean>(false);
+    const [tooltip, setTooltip] = useState<boolean>(true);
     const [content, setContent] = useState({
         title: "",
         description: ""
@@ -176,10 +177,20 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
         }
     }, 1000)
 
+    const showToolTip = useDebouncedCallback(() => {
+        try {
+            setTooltip(true);
+        } catch (error) {
+            console.log(error)
+        }
+    }, 1000)
+
     useEffect(() => {
         if (editorState === "second") return;
         console.log(editor);
+        setTooltip(false)
         handleUpdate();
+        showToolTip()
     }, [editorState, editor])
 
     // const addImage = () => {
@@ -200,14 +211,16 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
         console.log("is ending with / : ",editor.getText().endsWith('/'));
         console.log("editor will show up : ",editorMenu);
 
-        if (event.key === "/" || editor.getText().endsWith("/")) {
-            const { head } = editor?.state.selection;
-            const resolvedPos = editor?.view.coordsAtPos(head);  // Get coordinates of the caret
+        const { head } = editor?.state.selection;
+        const resolvedPos = editor?.view.coordsAtPos(head);  // Get coordinates of the caret
+        setPosition({
+            top: scroll.yscroll + resolvedPos.top,
+            left: scroll.xscroll + resolvedPos.left + 10
+        })
 
-            setPosition({
-                top: scroll.yscroll + resolvedPos.top,
-                left: scroll.xscroll + resolvedPos.left + 10
-            })
+        console.log(tooltip)
+        if (event.key === "/" || editor.getText().endsWith("/")) {
+
             setEditorMenu(true);
         }
         else setEditorMenu(false);
@@ -228,6 +241,12 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
 
             {
                 tableMenu && <TableMenu editor={editor} top={scroll.yscroll + selectionPos.top - 180} left={scroll.xscroll + selectionPos.left} />
+            }
+
+            {
+                tooltip && <div className='p-1 rounded-md absolute bg-secondary text-secondary-foreground' style={{ top: `${position.top}px`, left: `${position.left + 1}px`, zIndex: "49" }}>
+                    <p className='text-xs '>Write or type /</p>
+                </div>
             }
             <p className='text-4xl font-extrabold my-2'>{content.title}</p>
             <EditorContent ref={inputRef} editor={editor} className='min-w-[70vw] overflow-x-hidden flex flex-col justify-start' onKeyUp={(e) => handleKeyCapture(e)} >
