@@ -35,7 +35,7 @@ model User {
 model Subscriber {
   userId       String
   subscriberId String
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscribedAt DateTime @default(now())
 
   @@unique([userId, subscriberId])
@@ -90,7 +90,7 @@ model Blog {
   slug        String   @unique
   description String
   tags        Tag[]
-  author      User     @relation(fields: [userId], references: [id])
+  author      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Like        Like[]
   readers     User[]   @relation("SavedBlogs")
   isPublished Boolean  @default(false)
@@ -102,8 +102,8 @@ model Like {
   id     String @id @default(cuid())
   userId String
   blogId String
-  user   User   @relation(fields: [userId], references: [id])
-  blog   Blog   @relation(fields: [blogId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
 
   likedAt DateTime @default(now())
 
