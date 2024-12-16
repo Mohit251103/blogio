@@ -84,18 +84,19 @@ model VerificationToken {
 }
 
 model Blog {
-  id          String   @id @default(cuid())
-  userId      String
-  title       String
-  slug        String   @unique
-  description String
-  tags        Tag[]
-  author      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Like        Like[]
-  readers     User[]   @relation("SavedBlogs")
-  isPublished Boolean  @default(false)
-  publishedOn DateTime? 
-  createdOn   DateTime @default(now())
+  id               String    @id @default(cuid())
+  userId           String
+  title            String
+  slug             String    @unique
+  description      String
+  text_description String?
+  tags             Tag[]
+  author           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Like             Like[]
+  readers          User[]    @relation("SavedBlogs")
+  isPublished      Boolean   @default(false)
+  publishedOn      DateTime?
+  createdOn        DateTime  @default(now())
 }
 
 model Like {

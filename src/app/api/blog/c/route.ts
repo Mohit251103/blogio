@@ -18,7 +18,8 @@ export const POST = async (req:Request) => {
         const data = {
             slug: body.slug,
             userId: body.userId,
-            description: body.editorState ? body.editorState : ""
+            description: body.editorState ? body.editorState : "",
+            text_description: body.text_description
         }
 
         let blogData;
@@ -26,7 +27,8 @@ export const POST = async (req:Request) => {
             blogData = await prisma.blog.update({
                 where: { slug: data.slug },
                 data: {
-                    description: data.description
+                    description: data.description,
+                    text_description: data.text_description
                 }
             })
         }

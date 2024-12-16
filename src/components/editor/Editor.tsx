@@ -125,18 +125,14 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
 
     useEffect(() => {
         const handleScroll = () => {
-            // console.log('Scroll X:', window.scrollX);
-            // console.log('Scroll Y:', window.scrollY);
             setScroll({
                 xscroll: window.scrollX,
                 yscroll: window.scrollY
             })
         };
 
-        // Attach scroll event listener
         window.addEventListener('scroll', handleScroll);
 
-        // Cleanup function to remove the event listener
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
@@ -169,7 +165,7 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
     const handleUpdate = useDebouncedCallback(async () => {
         try {
             setDrafting(true);
-            const res = await axiosInstance.post("/api/blog/c", { editorState, slug: slug, userId: session?.user?.id });
+            const res = await axiosInstance.post("/api/blog/c", { editorState, slug: slug, userId: session?.user?.id, text_description: editor?.getText() });
             setBlogData(res.data.data)
             setDrafting(false);
         } catch (error) {
@@ -192,11 +188,6 @@ const Tiptap = ({ slug }: { slug: string | null }) => {
         handleUpdate();
         showToolTip()
     }, [editorState, editor])
-
-    // const addImage = () => {
-    //     const url = "";
-    //     editor?.chain().focus().setImage({ src: url }).run()
-    // }
 
     const handleKeyCapture = (event: any) => {
 
